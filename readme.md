@@ -4,7 +4,7 @@ El proyecto consiste en el desarrollo de una plataforma digital integral para el
 ---
 ## Equipo de Trabajo
 - Valentin Cabrera
-- Piero Valdez
+- Piero Valdes
 - Enzo Sabattini
 ---
 ## Estructura del Repositorio
