@@ -26,4 +26,4 @@ El proyecto consiste en el desarrollo de una plataforma digital integral para el
 ## Stack Tecnologico
 - Lenguaje de programacion: JavaScript, TypeScript.
 - Frameworks: ReactJS(Biblioteca), NestJS.
-- Base de datos: MongoDB
+- Base de datos: MongoDB.
