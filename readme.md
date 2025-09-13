@@ -4,7 +4,7 @@ El proyecto consiste en el desarrollo de una plataforma digital integral para el
 ---
 ## Equipo de Trabajo
 - Valentin Cabrera
-- Piero Valdez
+- Piero Valdes
 - Enzo Sabattini
 ---
 ## Estructura del Repositorio
@@ -14,13 +14,14 @@ El proyecto consiste en el desarrollo de una plataforma digital integral para el
   - evidenciasGrupales   
 
 - **`fase2/`** →
- - evidenciaIndividuales  
- - evidenciasGrupales
- - evidenciasProyecto  
+  - evidenciaIndividuales  
+  - evidenciasGrupales 
+  - evidenciaProyecto 
+
 
 - **`fase3/`** → 
- - evidenciaIndividuales  
- - evidenciasGrupales 
+  - evidenciaIndividuales  
+  - evidenciasGrupales
 --- 
 ## Stack Tecnologico
 - Lenguaje de programacion: JavaScript, TypeScript.
