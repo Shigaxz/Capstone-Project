@@ -1,0 +1,8 @@
+//Para iniciar Base de datos MongoDB:
+
+// Estando dentro de la instancia AWS EC2
+sudo systemctl start mongod
+sudo systemctl enable mongod
+sudo systemctl status mongod
+// Para probar la conexion desde pc local
+mongosh "mongodb://x.x.x.x:27017"
