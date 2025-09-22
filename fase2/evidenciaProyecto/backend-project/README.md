@@ -4,7 +4,7 @@ Back-end construido utilizando TypeScript y NEST JS.
 ## Features(Hasta el momento)
 * **Registro de Usuarios:** Creación de adminitradores y utilizacion de bcrypt para hashear contraseñas.
 * **Autenticación JWT:** Inicio de sesión que genera un JWT para autenticar solicitudes.
-* * **Base de Datos:** MongoDB.
+* **Base de Datos:** MongoDB.
 ---
 ## Documentación de la API
 | Endpoint             | Método | Descripción                                              | Body                                                        | Requiere x-api-key|
