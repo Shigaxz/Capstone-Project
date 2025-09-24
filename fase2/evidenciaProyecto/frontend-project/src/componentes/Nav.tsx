@@ -13,7 +13,10 @@ return(<>
         <GoListUnordered size={35} />
     </button>
     
-    <h1 className='text-2xl font-semibold text-center'>Reserva de Espacios CITT y Biblioteca</h1>
+    <Link to="/">
+        <h1 className='text-2xl font-semibold text-center' >Reserva de Espacios CITT y Biblioteca</h1>
+    </Link>
+    
     <Link to="/reservas">Reservas</Link>
 
     <button className='nav-btn rounded-full'>

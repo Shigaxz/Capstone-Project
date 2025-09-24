@@ -1,6 +1,10 @@
 
+import Nav from '../componentes/Nav'
+import Footer from '../componentes/Footer'
+
 function Reservas() {
-  return (
+  return (<>
+    <Nav/>
     <div>
       <h1>Reservas</h1>
       <h1>Reservas Page</h1>
@@ -16,6 +20,8 @@ function Reservas() {
         <strong>Location:</strong> CITT
       </p>
     </div>
+    <Footer/>
+    </>
   );
 }
 
