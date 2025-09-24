@@ -14,7 +14,10 @@ function App() {
     <div className='mt-5'>
       <CardSedes/>
     </div>
-    
+
+
+
+    <footer/>
     </>
   )
 }
