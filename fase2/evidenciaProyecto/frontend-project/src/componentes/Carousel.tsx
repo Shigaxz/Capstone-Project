@@ -16,9 +16,9 @@ const Carousel: React.FC<CarouselProps> = ({ items }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-    }, 5000); // Change slide every 5 seconds
+    }, 10000); 
 
-    return () => clearInterval(timer); // Cleanup on unmount
+    return () => clearInterval(timer);
   }, [items.length]);
 
   const goToPrevious = () => {

@@ -19,6 +19,9 @@ return(<>
     
     <Link to="/reservas">Reservas</Link>
 
+    <Link to="/Memorias">Memorias</Link>
+
+
     <button className='nav-btn rounded-full'>
         <GoPersonFill size={35} />
     </button>

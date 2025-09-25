@@ -1,6 +1,7 @@
 
-import Nav from '../componentes/Nav'
-import Footer from '../componentes/Footer'
+import Nav from '../../componentes/Nav'
+import Footer from '../../componentes/Footer'
+
 
 function Reservas() {
   return (<>
