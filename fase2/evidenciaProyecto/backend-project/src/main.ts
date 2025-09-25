@@ -17,7 +17,7 @@ async function bootstrap() {
   }));
 
   // Aplicar el ApiKeyGuard de forma global a toda la aplicación
-  //app.useGlobalGuards(new ApiKeyGuard(configService));
+  app.useGlobalGuards(new ApiKeyGuard(configService));
 
   await app.listen(process.env.PORT ?? 3000);
 }

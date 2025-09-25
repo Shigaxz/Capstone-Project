@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Schema as MongooseSchema } from 'mongoose';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { Location, LocationDocument } from './schemas/locations.schemas';
@@ -23,7 +24,9 @@ export class LocationsService {
       .findOne({ name: createLocationDto.name })
       .exec();
     if (existingLocation) {
-      throw new ConflictException(`El lugar con nombre '${createLocationDto.name}' ya existe.`);
+      throw new ConflictException(
+        `El lugar con nombre '${createLocationDto.name}' ya existe.`,
+      );
     }
     // Guarda y devuelve 201 Created
     const createdLocation = new this.locationModel(createLocationDto);
@@ -71,5 +74,26 @@ export class LocationsService {
       throw new NotFoundException(`Lugar con ID '${id}' no encontrado.`);
       // 204 No Content
     }
+  }
+  // Método para agregar un ID de espacio a un lugar
+  async addSpaceToLocation(
+    locationId: string,
+    spaceId: MongooseSchema.Types.ObjectId,
+  ): Promise<void> {
+    await this.locationModel.updateOne(
+      { _id: locationId },
+      { $push: { espacioId: spaceId } },
+    );
+  }
+
+  // Método para quitar un ID de espacio de un lugar
+  async removeSpaceFromLocation(
+    locationId: MongooseSchema.Types.ObjectId,
+    spaceId: string,
+  ): Promise<void> {
+    await this.locationModel.updateOne(
+      { _id: locationId },
+      { $pull: { espacioId: spaceId } },
+    );
   }
 }
