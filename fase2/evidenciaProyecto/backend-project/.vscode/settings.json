@@ -1,0 +1,7 @@
+{
+    // Establece Material Icon Theme como el tema de íconos para este espacio de trabajo.
+    "workbench.iconTheme": "material-icon-theme",
+
+    // Activa específicamente el paquete de íconos para NestJS.
+    "material-icon-theme.activeIconPack": "nest"
+}
