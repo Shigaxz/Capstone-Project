@@ -1,0 +1,12 @@
+.cpst-giratorio{
+    animation: girar 5s infinite linear;
+}
+
+@keyframes girar{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
