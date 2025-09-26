@@ -14,7 +14,7 @@ return(<>
     </button>
     
     <Link to="/">
-        <h1 className='text-2xl font-semibold text-center' >Reserva de Espacios CITT y Biblioteca</h1>
+        <h1 className='lg:text-2xl font-semibold text-center ' >Reserva de Espacios CITT y Biblioteca</h1>
     </Link>
     
     <Link to="/reservas">Reservas</Link>
@@ -22,7 +22,7 @@ return(<>
     <Link to="/Memorias">Memorias</Link>
 
 
-    <button className='nav-btn rounded-full'>
+    <button className='nav-btn rounded-full hidden lg:block'>
         <GoPersonFill size={35} />
     </button>
 

@@ -1,0 +1,16 @@
+.duoc-borders-x{
+    border-top: solid 2px var(--duoc-separator-line);
+ /*
+    border-bottom: solid 2px var(--duoc-separator-line);
+ */
+}
+.duoc-borders-x:first-child{
+    border: none;
+}
+.duoc-btn-seleccionar{
+    outline: solid 2px var(--duoc-primary-color);
+    transition: .2s; 
+}
+.duoc-btn-seleccionar:hover{
+    background-color: var(--duoc-primary-color);
+}
