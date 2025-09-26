@@ -1,0 +1,6 @@
+.duoc-item:first-child {
+margin-left: 10px;
+}
+.duoc-item:last-child{
+margin-right: 10px;
+}

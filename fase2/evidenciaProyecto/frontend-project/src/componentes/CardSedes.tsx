@@ -1,28 +1,39 @@
-function CardSedes(){
+import React from 'react';
+import './componentes_css/CardSedes.css'
+interface CardSedesProps {
+  titulo:string,
+  imagen:string,
+  direccion:string
+}
+
+const CardSedes: React.FC<CardSedesProps> = ({ titulo, imagen, direccion }) => {
 
 return(<>
-
-<div className="mx-auto max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl">
-  <div className="md:flex">
-     <div className="md:shrink-0">
-      <img
-        className="h-48 w-full object-cover md:h-full md:w-48"
-        src="https://www.duoc.cl/wp-content/uploads/2025/09/slider.jpg"
-        alt="Modern building architecture"
-      />
-     </div>
-     <div className="p-8">
-      <div className="text-sm font-semibold tracking-wide text-indigo-500 uppercase">Company retreats</div>
-      <a href="#" className="mt-1 block text-lg leading-tight font-medium text-black hover:underline">
-        Incredible accommodation for your team
-      </a>
-      <p className="mt-2 text-gray-500">
-        Looking to take your team away on a retreat to enjoy awesome food and take in some sunshine? We have a list of
-        places to do just that.
-      </p>
-     </div>
+<div className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1  sm:py-0 duoc-borders-x hover:bg-gray-100 transition-colors '>
+  <div className='p-2   flex justify-center'>
+    <img src={imagen} alt="" className='rounded-md lg:h-80'/>
   </div>
+  
+  <div className='flex flex-col justify-center items-center'>
+    <h1 className='lg:text-4xl md:text-4xl sm:text-4xl  font-bold text-center text-2xl'>{titulo}</h1>
+    <div className='text-center text-gray-600'>{direccion}</div>
+    <button className='rounded-full outline-2 hidden md:inline w-40 mt-10 py-1 duoc-btn-seleccionar transition-colors'>
+      <a href="/seleccionhorario">
+        Seleccionar
+      </a>
+      </button>
+  </div>
+
+  <div className='flex justify-center p-2 md:hidden'>
+    <button className='bg-amber-200 p-2 rounded-full hover:bg-amber-500 transition-colors w-40 h-10 lg:my-0 sm:my-2 focus:bg-amber-500 font-semibold'>
+      <a href="/seleccionhorario">
+        Seleccionar
+      </a>
+      </button>
+  </div>
+  
 </div>
+
 </>)
 }
 export default CardSedes

@@ -11,7 +11,6 @@ return(<>
     <Link to="/">
         <h1 className='text-xl font-semibold text-center mt-5 navtext ml-8' >Reserva de Espacios CITT y Biblioteca</h1>
     </Link>
-    
     </nav>
 
 </>)
