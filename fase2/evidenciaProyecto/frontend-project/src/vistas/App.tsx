@@ -4,9 +4,10 @@ import './app.css'
 import image1 from '../assets/imgsedes/Alameda.jpg';
 import image2 from '../assets/imgsedes/Antonio-varas.jpg';
 import image3 from '../assets/imgsedes/melipilla-2.jpg';
-import Nav from '../componentes/Nav'
-import Footer from '../componentes/Footer'
-import Carousel from '../componentes/Carousel'
+import Nav from '../componentes/Nav';
+import Footer from '../componentes/Footer';
+import Carousel from '../componentes/Carousel';
+import CardMenu from '../componentes/CardMenu';
 
 
 
@@ -24,8 +25,8 @@ function App() {
     { image: image3, text: 'Sede Melipilla', },
   ]}/>
 
-
-
+    <CardMenu/>
+    
     <Footer/>
     </>
   )

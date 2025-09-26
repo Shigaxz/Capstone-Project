@@ -1,31 +1,17 @@
 //import reactLogo from '../assets/react.svg'
 
 import './componentes_css/Nav.css'
-import { GoListUnordered,GoPersonFill } from "react-icons/go";
 import { Link } from 'react-router-dom';
 function Nav(){
 
 return(<>
-
-    <nav className="flex  justify-between  p-4 duoc-nav sticky top-0">
-    
-    <button className='nav-btn rounded-full'>
-        <GoListUnordered size={35} />
-    </button>
+    <nav className="flex  p-4 duoc-nav  top-0">
+     <img src="https://www.duoc.cl/wp-content/themes/wordpress-duoc-cl/images/logo-duoc.svg" className='imagenduoc' />
     
     <Link to="/">
-        <h1 className='text-2xl font-semibold text-center' >Reserva de Espacios CITT y Biblioteca</h1>
+        <h1 className='text-xl font-semibold text-center mt-5 navtext ml-8' >Reserva de Espacios CITT y Biblioteca</h1>
     </Link>
     
-    <Link to="/reservas">Reservas</Link>
-
-    <Link to="/Memorias">Memorias</Link>
-
-
-    <button className='nav-btn rounded-full'>
-        <GoPersonFill size={35} />
-    </button>
-
     </nav>
 
 </>)

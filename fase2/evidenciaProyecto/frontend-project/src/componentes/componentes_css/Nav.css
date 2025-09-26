@@ -1,5 +1,5 @@
 .duoc-nav{
-    background-color: var(--duoc-primary-color);
+    background-color: black;
 }
 .nav-btn:hover{
     background-color: rgba(167, 136, 0, 0.685);
@@ -8,4 +8,12 @@
 .nav-btn{
     padding: 8px;
     transition: .2s;
+}
+
+.imagenduoc{
+    height: 58px;
+}
+
+.navtext{
+    color: var(--duoc-primary-color);
 }
