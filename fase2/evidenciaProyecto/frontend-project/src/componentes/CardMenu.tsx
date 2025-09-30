@@ -17,7 +17,7 @@ const CardMenu = () => {
           className="card-image"
         />
         <p className="card-text">Reserva un espacio</p>
-        <Link to="/Reservas"><button className="card-button">Ver Reservas</button></Link>
+        <Link to="/Reservas"><button className="card-button">Reservar</button></Link>
       </div>
 
       <div className="card">

@@ -40,7 +40,7 @@ function Reservas() {
 
   return (<>
     <Nav/>
-    <h1 className='text-center bg-black text-amber-100 p-3 mb-3 sticky top-20 text-2xl font-serif'>Selecciona la Sede</h1>
+    <h1 className='text-center bg-black text-amber-100 p-3 mb-3 sticky top-0 text-2xl font-serif'>Selecciona la Sede</h1>
     <div className=''>
       {listaSedes.map((sede)=>(
 

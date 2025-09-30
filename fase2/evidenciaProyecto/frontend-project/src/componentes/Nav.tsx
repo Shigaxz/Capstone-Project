@@ -6,7 +6,7 @@ function Nav(){
 
 return(<>
     <nav className="flex  p-4 duoc-nav  top-0">
-     <img src="https://www.duoc.cl/wp-content/themes/wordpress-duoc-cl/images/logo-duoc.svg" className='imagenduoc' />
+     <img src="https://www.duoc.cl/wp-content/themes/wordpress-duoc-cl/images/logo-duoc.svg" className='imagenduoc hidden md:inline' />
     
     <Link to="/">
         <h1 className='text-xl font-semibold text-center mt-5 navtext ml-8' >Reserva de Espacios CITT y Biblioteca</h1>
