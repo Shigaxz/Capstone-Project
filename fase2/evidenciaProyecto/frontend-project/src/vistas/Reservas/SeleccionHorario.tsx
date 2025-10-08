@@ -2,7 +2,7 @@ import './SeleccionHorario.css'
 import { useState, useEffect } from 'react'
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import CardSedes from '../../componentes/CardSedes';
-
+import DateDisplay from '../../componentes/DateDisplay';
 function SeleccionHorario(){
 const listaHorarios = [
     'Hoy',
@@ -11,6 +11,11 @@ const listaHorarios = [
     '26 de Sep.',
     '27 de Sep.',
 ]
+const listaEspacios = [
+  'CITT',
+  'Biblioteca'
+]
+
 
 interface infoSede {
   nombre:string;
@@ -48,48 +53,44 @@ interface infoSede {
   ]
 
 
-const [dia , setDia] = useState('Hoy');
-const[segDia, setSegDia] = useState('')
+const [dia , setDia] = useState(listaHorarios[0]);
+const [lugar, setLugar] = useState(listaEspacios[1]);
+const[segDia, setSegDia] = useState('');
+const[segLugar, setSegLugar] = useState('');
 
 useEffect(()=>{
 setSegDia(dia);
-console.log('nuevo dia :',segDia);
-},[dia , segDia])
+setSegLugar(lugar);
+},[dia , segDia, lugar, segLugar])
 
 return(<>
 
 <div className="text-center text-4xl bg-amber-300 p-2">Seleccionar Horario</div>
-    <div className='flex items-center'>
-        <GoChevronLeft size={30} className='md:hidden'/>
-        <ul className="w-full flex justify-around flex-row gap-4 overflow-x-auto overflow-y-hidden  p-2 mx-2 rounded-sm bg-gray-200">
-    {listaHorarios.map((horario)=>(
-        <li className="w-full duoc-item" >
-            <button onClick={()=>{
-            setDia(horario);
-            }}
-            className="border-2 border-amber-300 hover:bg-amber-300 w-full flex justify-center focus:bg-amber-300 rounded-md z-50 bg-white transition-colors">
-                <div className="md:text-3xl text-2xl px-2 md:px-0 whitespace-nowrap">{horario}</div>
-            </button>
-            
-        </li>
 
-        
-    ))}
-    </ul>
-    <GoChevronRight size={30} className='md:hidden'/>
-    </div>
-    <div className='flex justify-center sticky top-0'>
-        <div className='text-2xl mt-2 bg-amber-300 md:w-80  w-50 text-center rounded-md shadow'>{segDia}</div>
-    </div>
-    
+<div className='flex justify-center items-center flex-col mt-2 sticky top-1.5'>
+  <div className='bg-amber-100 w-52 py-0.5 rounded-t-lg shadow text-center font-black'>{lugar}</div>
+  <div className='bg-amber-300 w-52  py-0.5 rounded-b-lg shadow text-center font-medium'>{dia}</div>
+</div>
 
-{listaSedes.map((sede)=>(
+<DateDisplay/>
 
-<CardSedes titulo={sede.nombre} imagen={sede.imagen} direccion={sede.direccion}/>
-   
+
+<input type="radio" defaultChecked={true} className='miracaezon' id='mish' name='lista'/>
+<label htmlFor="mish" className='bg-amber-200 ellabel'>que pasa chaval</label>
+
+<input type="radio" defaultChecked={false} className='miracaezon' id='pex' name='lista'/>
+<label htmlFor="pex" className='bg-amber-200 ellabel'>que pasa chaval 2 </label>
+
+    <div className=''>
+      {listaSedes.map((sede,index)=>(
+
+//<CardSedes key={index} titulo={sede.nombre} imagen={sede.imagen} direccion={sede.direccion}/>
+  <>
+  <input type="radio" defaultChecked={index==0?true:false} className='miracaezon' id={sede.nombre} name='sedes'/>
+<label htmlFor={sede.nombre} className='bg-amber-200 ellabel'>{sede.nombre}</label>
+  </>
    ))}
-
-
+    </div>
 
 </>)
 }

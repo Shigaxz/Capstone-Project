@@ -6,9 +6,11 @@ import './index.css'
 import Reservas from './vistas/Reservas/Reservas'; 
 import Memorias from './vistas/Memorias/Memorias';
 import SeleccionHorario from './vistas/Reservas/SeleccionHorario';
+import ScrollToTop from './componentes/ScrollToTop';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+    <ScrollToTop/>
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/reservas" element={<Reservas />} />

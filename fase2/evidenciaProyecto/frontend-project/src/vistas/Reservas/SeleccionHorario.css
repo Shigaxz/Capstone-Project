@@ -4,3 +4,17 @@ margin-left: 10px;
 .duoc-item:last-child{
 margin-right: 10px;
 }
+.miracaezon:checked + .ellabel{
+    background-color: var(--duoc-primary-color);
+}
+
+.ellabel{
+    transition: .2s;
+}
+.ellabel:hover{
+ background-color: var(--duoc-primary-color);
+}
+
+.miracaezon{
+    display: none;
+}
