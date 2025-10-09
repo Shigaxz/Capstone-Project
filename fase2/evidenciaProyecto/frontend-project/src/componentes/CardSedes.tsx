@@ -1,10 +1,16 @@
 import React from 'react';
 import './componentes_css/CardSedes.css'
+
+interface EspacioInfo{
+  nombre:string,
+  horarios:string
+}
+
 interface CardSedesProps {
   titulo:string,
   imagen:string,
   direccion:string,
-  espacios:string[]
+  espacios:EspacioInfo[]
 }
 
 const CardSedes: React.FC<CardSedesProps> = ({ titulo, imagen, direccion, espacios}) => {
@@ -21,7 +27,7 @@ return(<>
     {espacios.map((espacio)=>(
       <button className='rounded-full outline-2 hidden md:inline w-40 mt-10 py-1 duoc-btn-seleccionar transition-colors'>
       <a href="/seleccionhorario">
-        {espacio}
+        {espacio.nombre}
       </a>
       </button>
     ))}
@@ -32,7 +38,7 @@ return(<>
 {espacios.map((espacio)=>(
     <button className='bg-amber-200 p-2 rounded-full hover:bg-amber-500 transition-colors w-40 h-10 lg:my-0 sm:my-2 focus:bg-amber-500 font-semibold mx-1'>
       <a href="/seleccionhorario">
-        {espacio}
+        {espacio.nombre}
       </a>
       </button>
         ))}
