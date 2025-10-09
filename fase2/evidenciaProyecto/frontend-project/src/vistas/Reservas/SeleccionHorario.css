@@ -1,3 +1,6 @@
+:root{
+    --color-pe:rgb(255, 208, 0)
+}
 .duoc-item:first-child {
 margin-left: 10px;
 }
@@ -5,14 +8,15 @@ margin-left: 10px;
 margin-right: 10px;
 }
 .miracaezon:checked + .ellabel{
-    background-color: var(--duoc-primary-color);
+    background-color: var(--color-pe);
 }
 
 .ellabel{
+    border: 2px solid var(--color-pe);
     transition: .2s;
 }
 .ellabel:hover{
- background-color: var(--duoc-primary-color);
+ background-color: var(--color-pe);
 }
 
 .miracaezon{
