@@ -1,14 +1,25 @@
 import React from 'react';
 import { getSedes } from '../utils/sedesUtils';
+import { useNavigate } from 'react-router-dom';
 
 interface HorarioEspacioProps{
     nombreSede:string,
     espacioSede:string
 }
+
+interface FormData{
+    sede:string,
+    espacio:string,
+    sitio:string,
+    horario:string
+}
 const HorarioEspacio: React.FC<HorarioEspacioProps> = ({ nombreSede , espacioSede  })=>{
    const nomSede = getSedes()?.find((sede)=>{return sede.nombre==nombreSede});
    const espSede = nomSede?.espacios.find((esp)=>{return esp.nombre==espacioSede});
-    
+   const navigate = useNavigate()
+   const handlerForm = (data:FormData)=>{    
+        navigate('/formulario', {state:data})
+    }
    return (
     <div className='flex flex-col'>
         {espSede?.espacios.map((space)=>(
@@ -21,7 +32,12 @@ const HorarioEspacio: React.FC<HorarioEspacioProps> = ({ nombreSede , espacioSed
                     <div className='font-bold mb-2'>{space.nombre}</div>
                     <div className='my-2 grid grid-cols-4 bg-gray-100 p-5 rounded-lg'>
                         {space.horarios.map((hor)=>(
-                            <a href='' className='p-2 bg-amber-200 m-1 rounded-lg hover:bg-amber-300 transition-all'>{hor}</a>
+                            <a onClick={()=>{handlerForm({
+                                sede:nombreSede,
+                                espacio:espacioSede,
+                                sitio:space.nombre,
+                                horario:hor
+                            })}}  className='p-2 bg-amber-200 m-1 rounded-lg hover:bg-amber-300 transition-all hover:cursor-pointer'>{hor}</a>
                         ))}
                     </div>
                 </div>
