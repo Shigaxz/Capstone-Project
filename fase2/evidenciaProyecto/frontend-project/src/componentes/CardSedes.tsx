@@ -1,5 +1,6 @@
 import React from 'react';
 import './componentes_css/CardSedes.css'
+import { useNavigate } from 'react-router-dom';
 interface EspacioInfo{
   nombre:string,
   espacios:[]
@@ -12,8 +13,15 @@ interface CardSedesProps {
   espacios:EspacioInfo[]
 }
 
+interface DisplayHorarios{
+  nombreSede:string,
+  espacioSede:string
+}
 const CardSedes: React.FC<CardSedesProps> = ({ titulo, imagen, direccion, espacios}) => {
-
+const navigate = useNavigate()
+const handlerDisplayHorarios = (data:DisplayHorarios)=>{
+  navigate('/seleccionhorario',{state:data})
+}
 return(<>
 <div className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1  sm:py-0 duoc-borders-x hover:bg-gray-100 transition-colors '>
   <div className='p-2   flex justify-center'>
@@ -24,8 +32,14 @@ return(<>
     <h1 className='lg:text-4xl md:text-4xl sm:text-4xl  font-bold text-center text-2xl'>{titulo}</h1>
     <div className='text-center text-gray-600'>{direccion}</div>
     {espacios.map((espacio)=>(
-      <button className='rounded-full outline-2 hidden md:inline w-40 mt-10 py-1 duoc-btn-seleccionar transition-colors'>
-      <a href="/seleccionhorario">
+      <button onClick={()=>{
+        handlerDisplayHorarios({
+          nombreSede:titulo,
+          espacioSede:espacio.nombre
+        })
+      }} 
+      className='rounded-full outline-2 hidden md:inline w-40 mt-10 py-1 duoc-btn-seleccionar transition-colors'>
+      <a>
         {espacio.nombre}
       </a>
       </button>
@@ -35,8 +49,14 @@ return(<>
         
   <div className='flex justify-center p-2 md:hidden'>
 {espacios.map((espacio)=>(
-    <button className='bg-amber-200 p-2 rounded-full hover:bg-amber-500 transition-colors w-40 h-10 lg:my-0 sm:my-2 focus:bg-amber-500 font-semibold mx-1'>
-      <a href="/seleccionhorario">
+    <button onClick={()=>{
+        handlerDisplayHorarios({
+          nombreSede:titulo,
+          espacioSede:espacio.nombre
+        })
+      }} 
+    className='bg-amber-200 p-2 rounded-full hover:bg-amber-500 transition-colors w-40 h-10 lg:my-0 sm:my-2 focus:bg-amber-500 font-semibold mx-1'>
+      <a>
         {espacio.nombre}
       </a>
       </button>
