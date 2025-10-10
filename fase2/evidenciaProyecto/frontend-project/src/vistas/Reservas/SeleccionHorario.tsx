@@ -10,12 +10,16 @@ interface DisplayHorarios{
 function SeleccionHorario(){
 
 const locate = useLocation()
-const ladata = locate.state as DisplayHorarios
+const ladata = locate.state as DisplayHorarios | null
 const [dia , setDia] = useState('');
 
 const handleChildData = useCallback((data:string)=>{
   setDia(data);
 },[])
+
+if(!ladata){
+  return <div className='absolute self-center text-bold text-red-600 top-[50%] left-[50%]'>ERROR</div>
+}
 
 return(<>
 

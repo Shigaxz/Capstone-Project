@@ -9,8 +9,11 @@ interface HorarioEspacioProps{
 
 interface FormData{
     sede:string,
+    sedeImg:string,
+    sedeDireccion:string,
     espacio:string,
     sitio:string,
+    sitioImg:string,
     horario:string
 }
 const HorarioEspacio: React.FC<HorarioEspacioProps> = ({ nombreSede , espacioSede  })=>{
@@ -34,8 +37,11 @@ const HorarioEspacio: React.FC<HorarioEspacioProps> = ({ nombreSede , espacioSed
                         {space.horarios.map((hor)=>(
                             <a onClick={()=>{handlerForm({
                                 sede:nombreSede,
+                                sedeImg:nomSede?.imagen,
+                                sedeDireccion:nomSede?.direccion,
                                 espacio:espacioSede,
                                 sitio:space.nombre,
+                                sitioImg:space.imagen,
                                 horario:hor
                             })}}  className='p-2 bg-amber-200 m-1 rounded-lg hover:bg-amber-300 transition-all hover:cursor-pointer'>{hor}</a>
                         ))}
