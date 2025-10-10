@@ -10,6 +10,7 @@ onChildData: (dato:any)=>void
 // Componente principal
 const DateDisplay: React.FC<DateDisplayProps> = ({onChildData}) => {
   const [dates, setDates] = useState(getNextFiveDays());
+  
   const pasarDatoPalTaita = (data:any)=>{
 
     onChildData(data)
@@ -19,8 +20,11 @@ const DateDisplay: React.FC<DateDisplayProps> = ({onChildData}) => {
     // Si la aplicación fuera de larga duración, podrías añadir un intervalo
     // para refrescar las fechas a medianoche, pero para 5 días
     // y la hora actual, con un solo cálculo es suficiente.
+    onChildData(getNextFiveDays().find((e,index)=>{
+    return index == 0
+  })?.dateString)
     setDates(getNextFiveDays());
-  }, []);
+  }, [onChildData]);
 
   return (
     <div className='flex items-center mt-2 md:mt-4 '>

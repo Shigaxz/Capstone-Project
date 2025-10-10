@@ -1,14 +1,19 @@
-interface infoEspacio {
-  nombre:string;
+export interface infoInteriorEspacio{
+  nombre:string,
+  imagen:string,
   horarios:string[]
 }
-interface infoSede {
+export interface infoEspacio {
+  nombre:string;
+  espacios:infoInteriorEspacio[]
+}
+export interface infoSede {
   nombre:string;
   imagen:string;
   direccion:string;
   espacios:infoEspacio[];
 }
-const listaSedes:infoSede[]=[
+export const listaSedes:infoSede[]=[
     {
       nombre:'Sede San Bernardo',
       imagen:'https://www.duoc.cl/wp-content/uploads/2020/06/san-bernardo.jpg',
@@ -16,22 +21,55 @@ const listaSedes:infoSede[]=[
       espacios:[
         {
         nombre:'CITT',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Meson 1',
+            imagen:'/src/assets/imgCITT/E_CITT_3.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Meson 2',
+            imagen:'/src/assets/imgCITT/E_CITT_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
       },
       {
         nombre:'Biblioteca',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Espacio con Libros',
+            imagen:'/src/assets/imgBiblio/E_Biblioteca_1.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Espacio con Television',
+            imagen:'/src/assets/imgBiblio/E_Biblioteca_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
       }
     ]
     },
     {
       nombre:'Sede Alameda',
       imagen:'https://www.duoc.cl/wp-content/uploads/2020/06/Alameda.jpg',
-      direccion:'Av. España 8, Santiago Centro, Metro Estación República (esquina Alameda).'
-    ,espacios:[
+      direccion:'Av. España 8, Santiago Centro, Metro Estación República (esquina Alameda).',
+      espacios:[
       {
         nombre:'CITT',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Reunion 1',
+            imagen:'/src/assets/imgCITT/E_CITT_3.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Reunion 2',
+            imagen:'/src/assets/imgCITT/E_CITT_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
       }
     ]
     },
@@ -42,7 +80,18 @@ const listaSedes:infoSede[]=[
       ,espacios:[
       {
         nombre:'Biblioteca',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Reunion 1',
+            imagen:'/src/assets/imgCITT/E_CITT_3.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Reunion 2',
+            imagen:'/src/assets/imgCITT/E_CITT_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
       }
       ]
     },
@@ -53,11 +102,34 @@ const listaSedes:infoSede[]=[
       ,espacios:[
         {
         nombre:'CITT',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Reunion 1',
+            imagen:'/src/assets/imgCITT/E_CITT_3.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Reunion 2',
+            imagen:'/src/assets/imgCITT/E_CITT_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
+        
       },
       {
         nombre:'Biblioteca',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Reunion 1',
+            imagen:'/src/assets/imgCITT/E_CITT_3.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Reunion 2',
+            imagen:'/src/assets/imgCITT/E_CITT_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
       }
       ]
     },
@@ -68,11 +140,33 @@ const listaSedes:infoSede[]=[
       ,espacios:[
         {
         nombre:'CITT',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Reunion 1',
+            imagen:'/src/assets/imgCITT/E_CITT_3.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Reunion 2',
+            imagen:'/src/assets/imgCITT/E_CITT_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
       },
       {
         nombre:'Biblioteca',
-        horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+        espacios:[
+          {
+            nombre:'Reunion 1',
+            imagen:'/src/assets/imgCITT/E_CITT_3.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+          },
+          {
+            nombre:'Reunion 2',
+            imagen:'/src/assets/imgCITT/E_CITT_2.jpg',
+            horarios: ['12:00' , '13:00', '14:00', '17:00', '18:00', '20:00']
+          },
+        ]
       }
       ]
     },

@@ -1,9 +1,8 @@
 import React from 'react';
 import './componentes_css/CardSedes.css'
-
 interface EspacioInfo{
   nombre:string,
-  horarios:string
+  espacios:[]
 }
 
 interface CardSedesProps {

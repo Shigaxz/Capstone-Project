@@ -5,7 +5,7 @@ import HorarioEspacio from '../../componentes/HorarioEspacio';
 function SeleccionHorario(){
 
 
-const [dia , setDia] = useState('Hoy');
+const [dia , setDia] = useState('');
 const handleChildData = useCallback((data:string)=>{
   setDia(data);
 },[])
@@ -16,12 +16,12 @@ return(<>
 
 <DateDisplay onChildData={handleChildData}/>
 
-<div className='flex justify-center items-center flex-col mt-2 sticky top-1.5'>
+<div className='flex justify-center items-center flex-col my-2 sticky top-1.5'>
   <div className='bg-amber-300 w-52  py-0.5 rounded-lg shadow text-center font-medium'>{dia}</div>
 </div>
 
 
-<HorarioEspacio nombreSede='Sede San Bernardo' espacioSede='CITT'/>
+<HorarioEspacio nombreSede='Sede Alameda' espacioSede='CITT'/>
    
 
 
