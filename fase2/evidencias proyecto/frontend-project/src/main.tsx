@@ -1,6 +1,5 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './vistas/App'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.css'
 import Reservas from './vistas/Reservas/Reservas'; 
