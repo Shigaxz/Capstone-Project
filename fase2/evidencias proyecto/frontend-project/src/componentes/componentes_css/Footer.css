@@ -1,3 +1,12 @@
 footer{
     background-color: rgb(55, 55, 55);
+    background: #1a1a1a !important;
+}
+
+.border-duoc{
+    border-color: var(--duoc-primary-color);
+}
+
+.text-duoc:hover{
+    color: var(--duoc-primary-color);
 }

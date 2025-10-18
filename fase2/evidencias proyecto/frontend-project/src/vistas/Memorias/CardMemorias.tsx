@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import './Memorias.css'
 
 interface CardMemoriasProps {
   imageUrl: string;
@@ -10,8 +11,8 @@ interface CardMemoriasProps {
 
 const CardMemorias: React.FC<CardMemoriasProps> = ({ imageUrl, date, title, link}) => {
   return (
-<div className="max-w-sm h-[400px] bg-white shadow-lg overflow-hidden 
-                transition duration-300 ease-in-out  flex flex-col">
+<div className="max-w-sm h-[400px]  shadow-lg
+                  flex flex-col cardmemo ">
   <div className="h-2/3 w-full">
     <img
       src={imageUrl}
@@ -28,7 +29,7 @@ const CardMemorias: React.FC<CardMemoriasProps> = ({ imageUrl, date, title, link
      <div className="flex justify-end mt-2">
   <Link
     to={link}
-    className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center"
+    className="text-sm font-medium  flex items-center"
   >
     Leer noticia
     <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
