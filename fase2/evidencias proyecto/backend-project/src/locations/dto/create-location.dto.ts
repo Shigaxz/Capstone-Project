@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsMongoId,
   IsArray,
+  IsUrl,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -39,4 +40,14 @@ export class CreateLocationDto {
   @IsBoolean()
   @IsOptional()
   readonly isAvailable?: boolean;
+
+  @ApiProperty({
+    description: 'URL de la imagen representativa del lugar',
+    example: 'https://ejemplo.com/imagen_biblioteca.jpg',
+    required: false,
+  })
+  @IsOptional()
+  @IsUrl({}, { message: 'El campo urlImage debe ser una URL válida' }) // <-- 2. Añadir validación de URL
+  @IsString()
+  readonly urlImage?: string;
 }

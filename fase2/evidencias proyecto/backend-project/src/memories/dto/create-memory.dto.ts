@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsOptional,
   ArrayMinSize,
+  IsUrl,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -29,7 +30,7 @@ export class CreateMemoryDto {
 
   @ApiProperty({
     description: 'Nombre del profesor guía de la memoria.',
-    example: 'Profeser...',
+    example: 'Profesor...',
   })
   @IsString()
   @IsNotEmpty()
@@ -52,4 +53,14 @@ export class CreateMemoryDto {
   @Type(() => Number) // Transforma el string del form-data a número
   @IsNotEmpty()
   readonly year: number;
+
+  @ApiProperty({
+    description: 'Array de URLs de las imágenes de la memoria.',
+    example: ['https://ejemplo.com/foto1.jpg', 'https://ejemplo.com/foto2.png'],
+    required: false,
+  })
+  @IsArray()
+  @IsUrl({}, { each: true, message: 'Cada imagen debe ser una URL válida' })
+  @IsOptional()
+  readonly images?: string[];
 }

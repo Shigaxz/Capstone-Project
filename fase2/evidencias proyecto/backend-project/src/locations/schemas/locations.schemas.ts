@@ -18,6 +18,9 @@ export class Location {
 
   @Prop({ required: true, default: true })
   isAvailable: boolean;
+
+  @Prop({ required: false, trim: true })
+  urlImage: string;
 }
 
 export const LocationSchema = SchemaFactory.createForClass(Location);
