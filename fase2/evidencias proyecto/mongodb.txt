@@ -1,47 +1,90 @@
-//Base de datos MongoDB:
-1. Actualizar paquetes:
+// Base de datos MongoDB: Colecciones del Proyecto CITT
 
-sudo apt update && sudo apt upgrade -y
+A continuación se describe la estructura de las colecciones utilizadas en la base de datos.
 
-2. Importar clave publida de MongoDB:
+// ======================================================================
+// Colección: admins
+// Propósito: Almacena las credenciales de los administradores.
+// ======================================================================
 
-curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
-   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
-   --dearmor
+{
+  "_id": ObjectId("..."),
+  "name": "Nombre del Admin",
+  "email": "admin@profesor.duoc.cl",
+  "password": "hash_de_la_contraseña_bcrypt",
+  "createdAt": ISODate("..."),
+  "updatedAt": ISODate("...")
+}
 
-3. Agregar el repositorio de MongoDB:
+// ======================================================================
+// Colección: locations
+// Propósito: Almacena los lugares físicos principales (ej. CITT, Biblioteca).
+// ======================================================================
 
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] \
-https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | \
-sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+{
+  "_id": ObjectId("..."),
+  "name": "Biblioteca Central",
+  "floor": 1,
+  "espacioId": [
+    ObjectId("id_del_espacio_1"),
+    ObjectId("id_del_espacio_2")
+  ],
+  "isAvailable": true,
+  "urlImage": "https://ejemplo.com/imagen_biblioteca.jpg",
+  "createdAt": ISODate("..."),
+  "updatedAt": ISODate("...")
+}
 
-4. Actualizar repositorio e instalar MongoDB:
+// ======================================================================
+// Colección: spaces
+// Propósito: Almacena los espacios específicos que se pueden reservar.
+// ======================================================================
 
-sudo apt update
-sudo apt install -y mongodb-org
+{
+  "_id": ObjectId("..."),
+  "name": "Cubículo A-01",
+  "lugarId": ObjectId("id_del_location_padre"), // Referencia a 'locations'
+  "capacity": 4,
+  "isAvailable": true,
+  "createdAt": ISODate("..."),
+  "updatedAt": ISODate("...")
+}
 
-5. Habilitar Conexiones publicas:
+// ======================================================================
+// Colección: memories
+// Propósito: Almacena la información de las memorias y proyectos.
+// ======================================================================
 
-sudo nano /etc/mongod.conf
+{
+  "_id": ObjectId("..."),
+  "title": "Prototipo de Brazo Robótico",
+  "members": [
+    "Valentina Rojas",
+    "Juan Pérez"
+  ],
+  "teacher": "Prof. Ricardo Soto",
+  "company": "Innovación Robótica SpA",
+  "year": 2025,
+  "images": [
+    "https://ejemplo.com/foto_prototipo1.jpg",
+    "https://ejemplo.com/foto_prototipo2.jpg"
+  ],
+  "createdAt": ISODate("..."),
+  "updatedAt": ISODate("...")
+}
 
-6. Cambiar Bindip de la seccion net:
+// ======================================================================
+// Colección: reservations
+// Propósito: Almacena las solicitudes de reserva de espacios.
+// ======================================================================
 
-net:
-  port: 27017
-  bindIp: 127.0.0.1
-
-7. Remplazarlo con estos datos:
-
-net:
-  port: 27017
-  bindIp: 0.0.0.0
-
-8. Habilitar servicio de MongoDB:
-
-sudo systemctl start mongod
-sudo systemctl enable mongod
-sudo systemctl status mongod
-
-9. Probar la conexion desde PC local:
-
-mongosh "mongodb://x.x.x.x:27017"
+{
+  "_id": ObjectId("..."),
+  "espacioId": ObjectId("id_del_space_reservado"), // Referencia a 'spaces'
+  "email": "valentina.rojas@duocuc.cl",
+  "startTime": ISODate("2025-10-20T14:00:00Z"),
+  "endTime": ISODate("2025-10-20T14:30:00Z"),
+  "isApproved": null, // null = pendiente, true = aprobado, false = rechazado
+  "createdAt": ISODate("..."),
+  "updatedAt": ISODate("...")
+}

@@ -4,7 +4,7 @@ Back-end construido utilizando TypeScript y NEST JS.
 ## Features(Hasta el momento)
 * **Gestión de entidades:** CRUD completo para Lugares, Espacios y Memorias.
 * **Registro de Usuarios:** Creación de adminitradores y utilizacion de bcrypt para hashear contraseñas.
-* **Subida de Archivos a S3:** Integración con AWS S3 para el almacenamiento de imágenes de las memorias.
+* **Notificaciones por Correo:** Envío automático de emails (usando SMTP) al aprobar o rechazar reservas..
 * **Autenticación JWT:** Inicio de sesión que genera un JWT para autenticar solicitudes.
 * **Documentación Automatizada:** API documentada de forma interactiva con Swagger (OpenAPI).
 * **Base de Datos:** MongoDB.
@@ -24,14 +24,12 @@ MONGO_URL=mongodb://tu_url_de_conexion
 JWT_SECRET=tu_clave_secreta_para_jwt
 # API Key
 API_KEY=tu_api_key_personalizada
-# AWS S3
-AWS_ACCESS_KEY_ID=tu_id_de_clave_de_acceso_aws
-AWS_SECRET_ACCESS_KEY=tu_clave_de_acceso_secreta_aws
-AWS_REGION=tu_region_aws
-AWS_S3_BUCKET_NAME=el_nombre_de_tu_bucket_s3
-# Opcional: Solo si usas credenciales temporales (ej: AWS Academy)
-AWS_SESSION_TOKEN=tu_token_de_sesion_temporal
+# Servidor de Correo (SMTP)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=465
+EMAIL_USER=tu_correo@gmail.com
+EMAIL_PASS=tu_contraseña_de_aplicacion
 ```
 ---
 ## Base de datos
-Dentro de la carpeta **`fase2/evidenciaProyecto`**, **`mongodb.txt`** posee las indicaciones para desplegar la base de datos MongoDB.
+Dentro de la carpeta **`fase2/evidenciaProyecto`**, **`mongodb.txt`** posee la descripción de las colecciones y la estructura de datos utilizada en la base de datos.
