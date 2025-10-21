@@ -7,7 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors();
   // Obtenemos ConfigService para inyectarlo en el Guard global
   const configService = app.get(ConfigService);
   // Configuración global del ValidationPipe
