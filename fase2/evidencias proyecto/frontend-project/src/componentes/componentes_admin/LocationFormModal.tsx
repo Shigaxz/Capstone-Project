@@ -97,7 +97,6 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
   }
 
   return (
-    // Overlay oscuro de fondo
     <div className="fixed inset-0 bg-black/70 z-40 flex items-center justify-center p-4 transition-opacity duration-300">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-100">
         <div className="flex justify-between items-center p-4 border-b">

@@ -9,8 +9,7 @@ const Sidebar: React.FC = () => {
       : `${linkClasses} text-gray-600 hover:bg-gray-200 hover:text-gray-900`;
 
   return (
-    // Contenedor del Sidebar
-    <aside className="w-64 bg-white shadow-md flex-shrink-0 overflow-y-auto"> {/* Ancho fijo */}
+    <aside className="w-64 bg-white shadow-md flex-shrink-0 overflow-y-auto">
       <div className="p-4">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Menú</h2>
         <nav className="space-y-1">
@@ -20,6 +19,14 @@ const Sidebar: React.FC = () => {
 
           <NavLink to="/admin/dashboard/spaces" className={activeLinkClasses}>
             Gestionar Espacios
+          </NavLink>
+
+          <NavLink to="/admin/dashboard/memories" className={activeLinkClasses}>
+            Gestionar Memorias
+          </NavLink>
+
+          <NavLink to="/admin/dashboard/reservations" className={activeLinkClasses}>
+            Gestionar Reservas
           </NavLink>
         </nav>
       </div>

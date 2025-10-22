@@ -44,3 +44,13 @@ export const deleteSpace = async (id: string): Promise<void> => {
     throw error.response?.data || new Error('Error al eliminar espacio');
   }
 };
+
+export const getAllSpaces = async (): Promise<Space[]> => {
+  try {
+    const response = await apiService.get('/spaces');
+    return response.data;
+  } catch (error: any) {
+    console.error('Error:', error.response?.data || error.message);
+    throw error.response?.data || new Error('Error al obtener todos los espacios');
+  }
+};

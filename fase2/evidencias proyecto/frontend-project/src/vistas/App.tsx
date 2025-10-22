@@ -10,6 +10,8 @@ import LoginPage from "../vistas/Admin/LoginPage";
 import AdminLayout from '../vistas/Admin/AdminLayout';  
 import LocationManager from '../vistas/Admin/LocationManager';
 import SpaceManager from '../vistas/Admin/SpaceManager';
+import MemoryManager from '../vistas/Admin/MemoryManager';
+import ReservationManager from '../vistas/Admin/ReservationManager';
 
 function App() {
   return (
@@ -25,10 +27,10 @@ function App() {
         <Route path="/admin" element={<LoginPage />} />
 
       <Route path="/admin/dashboard" element={<AdminLayout />}>
-          {/* Se renderizan DENTRO del <Outlet/> de AdminLayout */}
           <Route path="locations" element={<LocationManager />} /> 
           <Route path="spaces" element={<SpaceManager />} />
-          
+          <Route path="memories" element={<MemoryManager />} />
+          <Route path="reservations" element={<ReservationManager />} />
         </Route>
 
       </Routes>
