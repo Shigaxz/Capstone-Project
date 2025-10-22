@@ -5,9 +5,11 @@ export interface Memory {
   teacher: string;
   company?: string;
   year: number;
+  description: string;
   images: string[];
   createdAt?: string;
   updatedAt?: string;
+ 
 }
 
 // Interface para crear 
@@ -17,6 +19,7 @@ export interface CreateMemoryData {
   teacher: string;
   company?: string;
   year: number;
+  description: string;
   images?: string[];
 }
 
@@ -27,5 +30,6 @@ export interface UpdateMemoryData {
   teacher?: string;
   company?: string;
   year?: number;
+  description?: string;
   images?: string[];
 }

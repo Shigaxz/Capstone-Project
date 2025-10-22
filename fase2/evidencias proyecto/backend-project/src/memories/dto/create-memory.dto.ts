@@ -53,6 +53,14 @@ export class CreateMemoryDto {
   @Type(() => Number) // Transforma el string del form-data a número
   @IsNotEmpty()
   readonly year: number;
+  
+  @ApiProperty ({
+    description: 'Descripcion detallada de la memoria.',
+    example : 'Este proyecto consiste en...'
+  })
+  @IsString()
+  @IsNotEmpty()
+  readonly description: string;
 
   @ApiProperty({
     description: 'Array de URLs de las imágenes de la memoria.',

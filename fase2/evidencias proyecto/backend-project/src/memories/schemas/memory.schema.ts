@@ -20,6 +20,9 @@ export class Memory {
   @Prop({ required: true })
   year: number;
 
+  @Prop({ required: true })
+  description: string;
+
   @Prop({ type: [String], default: [] })
   images: string[]; // Array de enlaces
 }

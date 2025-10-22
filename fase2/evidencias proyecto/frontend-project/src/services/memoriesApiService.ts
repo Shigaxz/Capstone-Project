@@ -39,3 +39,13 @@ export const deleteMemory = async (id: string): Promise<void> => {
     throw error.response?.data || new Error('Error al eliminar memoria');
   }
 };
+
+export const getMemoryById = async (id: string): Promise<Memory> => {
+  try {
+    const response = await apiService.get(`/memories/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error:', error.response?.data || error.message);
+    throw error.response?.data || new Error('Error al obtener la memoria');
+  }
+};

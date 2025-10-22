@@ -22,6 +22,7 @@ const MemoryFormModal: React.FC<MemoryFormModalProps> = ({
     company: '',
     year: new Date().getFullYear(),
     images: [''],  // Empezar con un campo de imagen
+    description :'',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +41,7 @@ const MemoryFormModal: React.FC<MemoryFormModalProps> = ({
           company: initialData.company || '',
           year: initialData.year,
           images: initialData.images.length > 0 ? initialData.images : [''],
+          description : initialData.description || '',
         });
       } else {
         // Resetea para creación con un campo inicial para cada array
@@ -56,7 +58,9 @@ const MemoryFormModal: React.FC<MemoryFormModalProps> = ({
     }
   }, [isOpen, initialData, isEditing]);
 
-  const handleSimpleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSimpleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -267,6 +271,20 @@ const MemoryFormModal: React.FC<MemoryFormModalProps> = ({
             + Añadir URL de Imagen
           </button>
         </div>
+        <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleSimpleChange}
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+        </div>        
 
         <div className="flex justify-end pt-4 border-t mt-6">
           <button
