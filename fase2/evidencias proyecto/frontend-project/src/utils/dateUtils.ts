@@ -2,53 +2,68 @@
 
 interface FormattedDate {
   dateString: string;
+  dayName: string;
   fullDate: Date;
 }
 
 /**
  * Genera un array con la fecha actual y los siguientes 4 días.
- * Formatea la cadena de texto para mostrar 'Hoy' y 'Mañana'.
+ * Omite los fines de semana y devuelve el nombre del día.
+ * Formatea la cadena para mostrar 'Hoy', 'Mañana' o la fecha.
  * @returns Un array de objetos FormattedDate.
  */
 export const getNextFiveDays = (): FormattedDate[] => {
   const dates: FormattedDate[] = [];
-  const today = new Date(); // Fecha actual
+  const today = new Date();
+  const currentDate = new Date();
 
-  // Opciones de formato para el día y mes (ej: '8 de Oct')
-  const formatterOptions: Intl.DateTimeFormatOptions = {
+  const dateformatterOptions: Intl.DateTimeFormatOptions = {
     day: 'numeric',
-    month: 'short', // 'short' para Oct, Nov, etc.
+    month: 'short',
   };
 
-  for (let i = 0; i < 5; i++) {
-    const nextDate = new Date();
-    nextDate.setDate(today.getDate() + i); // Añade 'i' días a la fecha de hoy
+  const dayFormatterOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+  };
 
-    let dateString: string;
+  while (dates.length < 5) {
+    const dayOfWeek = currentDate.getDay();
 
-    if (i === 0) {
-      dateString = 'Hoy';
-    } else if (i === 1) {
-      dateString = 'Mañana';
-    } else {
-      // Formato para el día y el mes (ej: 8 de Oct)
-      // Ajuste para capitalizar la primera letra del mes (opcional)
-      const parts = new Intl.DateTimeFormat('es-ES', formatterOptions).formatToParts(nextDate);
-      const day = parts.find(p => p.type === 'day')?.value;
-      let month = parts.find(p => p.type === 'month')?.value;
+    // 0 = Domingo, 6 = Sábado. Solo procesamos días de semana.
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      let dateString: string;
 
-      // Capitaliza la primera letra del mes
-      if (month) {
-        month = month.charAt(0).toUpperCase() + month.slice(1);
+      const isToday = today.toDateString() === currentDate.toDateString();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      const isTomorrow = tomorrow.toDateString() === currentDate.toDateString();
+
+      if (isToday) {
+        dateString = 'Hoy';
+      } else if (isTomorrow) {
+        dateString = 'Mañana';
+      } else {
+        const parts = new Intl.DateTimeFormat('es-ES', dateformatterOptions).formatToParts(currentDate);
+        const day = parts.find(p => p.type === 'day')?.value;
+        let month = parts.find(p => p.type === 'month')?.value;
+
+        if (month) {
+          month = month.charAt(0).toUpperCase() + month.slice(1);
+        }
+
+        dateString = `${day} de ${month}.`;
       }
 
-      dateString = `${day} de ${month}.`;
-    }
+      let dayName = new Intl.DateTimeFormat('es-ES', dayFormatterOptions).format(currentDate);
+      dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
 
-    dates.push({
-      dateString,
-      fullDate: nextDate,
-    });
+      dates.push({
+        dateString,
+        dayName,
+        fullDate: new Date(currentDate),
+      });
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
   }
 
   return dates;

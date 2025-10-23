@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-useless-catch */
 import React, { useState, useEffect } from 'react';
 import { getMemories, deleteMemory, updateMemory, createMemory } from '../../services/memoriesApiService';
 import type { Memory, CreateMemoryData, UpdateMemoryData } from '../../interfaces/memories';
