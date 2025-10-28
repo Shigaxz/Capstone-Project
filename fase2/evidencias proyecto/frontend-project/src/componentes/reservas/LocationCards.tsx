@@ -50,7 +50,7 @@ const LocationCards: React.FC = () => {
               <img
                 src={location.urlImage || 'https://via.placeholder.com/400x300.png?text=Sin+Imagen'}
                 alt={location.name}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-100 h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
             </div>
             <div className="p-4">

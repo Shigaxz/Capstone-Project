@@ -34,7 +34,7 @@ const DateDisplay: React.FC<DateDisplayProps> = ({onChildData}) => {
     <li className='w-full text-center'>
       <input type="radio" defaultChecked={index==0?true:false} className='miracaezon ' onClick={()=>pasarDatoPalTaita(dateObj.dateString)} id={dateObj.fullDate.toISOString()} name='fechas'/>
       <label htmlFor={dateObj.fullDate.toISOString()} className='ellabel text-center mx-2  border-2 block whitespace-nowrap rounded-md md:px-0 px-2'>
-          {dateObj.dateString}
+         ({dateObj.dayName}) {dateObj.dateString}
         </label>
     </li>
         ))}  
