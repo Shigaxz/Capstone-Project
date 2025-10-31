@@ -1,10 +1,20 @@
-import { Controller, Post, Body, Get, Patch, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Patch,
+  Param,
+  UseGuards,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 
-@ApiHeader({ 
+@ApiHeader({
   name: 'x-api-key',
   description: 'Clave de API para autorización de la solicitud',
   required: true,
@@ -16,8 +26,14 @@ export class ReservationsController {
 
   @Post()
   @ApiOperation({ summary: 'Crear una nueva solicitud de reserva' })
-  @ApiResponse({ status: 201, description: 'Solicitud creada, pendiente de aprobación.' })
-  @ApiResponse({ status: 409, description: 'Conflicto, el horario ya está ocupado.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Solicitud creada, pendiente de aprobación.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto, el horario ya está ocupado.',
+  })
   create(@Body() createReservationDto: CreateReservationDto) {
     return this.reservationsService.create(createReservationDto);
   }
@@ -29,7 +45,9 @@ export class ReservationsController {
   }
 
   @Get('history')
-  @ApiOperation({ summary: 'Obtener historial de reservas aprobadas/rechazadas' })
+  @ApiOperation({
+    summary: 'Obtener historial de reservas aprobadas/rechazadas',
+  })
   findAllHistory() {
     return this.reservationsService.findAllHistory();
   }
@@ -44,5 +62,26 @@ export class ReservationsController {
   @ApiOperation({ summary: 'Rechazar una reserva' })
   reject(@Param('id', ParseMongoIdPipe) id: string) {
     return this.reservationsService.reject(id);
+  }
+  
+  @Get('availability/:spaceId')
+  @ApiOperation({
+    summary: 'Obtener disponibilidad de un espacio para una fecha',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Devuelve una lista de reservas (pendientes y aprobadas) para ese día.',
+  })
+  findAvailability(
+    @Param('spaceId', ParseMongoIdPipe) spaceId: string,
+    @Query('date') date: string, // Recibe la fecha como query param, ej: ?date=2025-10-30
+  ) {
+    if (!date) {
+      throw new BadRequestException(
+        'Se requiere una fecha (date) en el query param.',
+      );
+    }
+    return this.reservationsService.findAvailabilityBySpace(spaceId, date);
   }
 }
