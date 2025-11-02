@@ -9,6 +9,8 @@ import { SpacesModule } from './spaces/spaces.module';
 import { MemoriesModule } from './memories/memories.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -36,6 +38,13 @@ import { MailerModule } from '@nestjs-modules/mailer';
         },
         defaults: {
           from: '"Reservas CITT" <no-reply@citt.cl>',
+        },
+        template: {
+          dir: join(__dirname, '..', 'templates'), 
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
         },
       }),
       inject: [ConfigService],

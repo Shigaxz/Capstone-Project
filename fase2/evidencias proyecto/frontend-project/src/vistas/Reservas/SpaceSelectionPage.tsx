@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getSpacesByLocation } from '../../services/spacesApiServices';
 import type { Space } from '../../interfaces/spaces';
 import Footer from '../../componentes/Footer';
+import Navbar from '../../componentes/reservas/Navbar';
 
 const SpaceSelectionPage: React.FC = () => {
   const { id: locationId } = useParams<{ id: string }>();
@@ -10,7 +11,7 @@ const SpaceSelectionPage: React.FC = () => {
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [locationName, setLocationName] = useState<string>(''); 
+
 
   useEffect(() => {
     if (!locationId) {
@@ -47,17 +48,12 @@ const SpaceSelectionPage: React.FC = () => {
 
   return (
     <>
+    <Navbar 
+        buttonText="Volver a Lugares" 
+        buttonPath="/reservas" 
+      />
     <div className="bg-slate-50 min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Botón para volver */}
-        <div className="mb-6">
-          <Link
-            to="/reservas"
-            className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-        &larr; Volver a Lugares
-          </Link>
-        </div>
 
         {/* Título */}
         <div className="text-center mb-10">

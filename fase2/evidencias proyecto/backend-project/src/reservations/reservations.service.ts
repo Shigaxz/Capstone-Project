@@ -9,6 +9,10 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { addMinutes } from 'date-fns';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Reservation, ReservationDocument } from './schemas/reservation.schema';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { Space } from '../spaces/schemas/space.schema';
+
 
 @Injectable()
 export class ReservationsService {
@@ -67,7 +71,7 @@ export class ReservationsService {
   }
 
   private async findById(id: string): Promise<ReservationDocument> {
-    const reservation = await this.reservationModel.findById(id).exec();
+    const reservation = await this.reservationModel.findById(id).populate<Space>('espacioId').exec();
     if (!reservation) {
       throw new NotFoundException(`Reserva con ID '${id}' no encontrada.`);
     }
@@ -80,11 +84,25 @@ export class ReservationsService {
     reservation.isApproved = true;
     await reservation.save();
 
-    // Enviar correo de aprobación
+    // Prepara los datos 
+    const spaceName = (reservation.espacioId as Space)?.name || 'Espacio Desconocido';
+    const emailUsuario = reservation.email.split('@')[0];
+    const fechaReserva = format(reservation.startTime, "eeee, dd 'de' MMMM 'de' yyyy", { locale: es });
+    const horaInicio = format(reservation.startTime, "HH:mm 'hrs.'", { locale: es });
+    const horaFin = format(reservation.endTime, "HH:mm 'hrs.'", { locale: es });
+
+    // Enviar correo usando la plantilla
     await this.mailerService.sendMail({
       to: reservation.email,
-      subject: '¡Tu reserva en CITT ha sido aprobada!',
-      html: `Hola, tu reserva para el día ${reservation.startTime.toLocaleString()} ha sido aprobada.`,
+      subject: `¡Tu reserva en CITT ha sido aprobada! [${spaceName}]`,
+      template: 'aprobado',
+      context: {
+        emailUsuario: emailUsuario,
+        spaceName: spaceName,
+        fechaReserva: fechaReserva,
+        horaInicio: horaInicio,
+        horaFin: horaFin,
+      },
     });
 
     return reservation;
@@ -96,11 +114,24 @@ export class ReservationsService {
     reservation.isApproved = false;
     await reservation.save();
 
-    // Enviar correo de rechazo
+    // Prepara los datos
+    const spaceName = (reservation.espacioId as Space)?.name || 'Espacio Desconocido';
+    const emailUsuario = reservation.email.split('@')[0];
+    const fechaReserva = format(reservation.startTime, "dd 'de' MMMM", { locale: es });
+    const horaInicio = format(reservation.startTime, "HH:mm 'hrs.'", { locale: es });
+
+    // Enviar correo usando plantilla
     await this.mailerService.sendMail({
       to: reservation.email,
-      subject: 'Actualización sobre tu reserva en CITT',
-      html: `Hola, lamentamos informarte que tu reserva para el día ${reservation.startTime.toLocaleString()} ha sido rechazada.`,
+      subject: `Actualización sobre tu reserva en CITT [${spaceName}]`,
+      
+      template: 'rechazado',
+      context: {
+        emailUsuario: emailUsuario,
+        spaceName: spaceName,
+        fechaReserva: fechaReserva,
+        horaInicio: horaInicio,
+      },
     });
 
     return reservation;

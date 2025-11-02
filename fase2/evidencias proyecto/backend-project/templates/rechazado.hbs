@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; }
+    .container { width: 90%; margin: auto; padding: 20px; }
+    .header { font-size: 24px; color: #D9534F; }
+    .content { margin-top: 20px; }
+    .footer { font-size: 0.9em; color: #777; margin-top: 20px; }
+    strong { color: #D9534F; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="header">Reserva Rechazada</h2>
+    <div class="content">
+      <p>Hola {{emailUsuario}},</p>
+      <p>Lamentamos informarte que tu solicitud de reserva para el espacio <strong>{{spaceName}}</strong> el día <strong>{{fechaReserva}}</strong> a las <strong>{{horaInicio}}</strong> ha sido rechazada.</p>
+      <p>Si tienes dudas, puedes acercarte presencialmente al CITT.</p>
+    </div>
+    <p class="footer">Este es un correo automático, por favor no responder.</p>
+  </div>
+</body>
+</html>

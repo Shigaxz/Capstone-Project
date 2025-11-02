@@ -71,9 +71,6 @@ export const getReservationsForSpaceAndDate = async (
 ): Promise<Reservation[]> => {
   try {
     const dateString = format(date, "yyyy-MM-dd");
-    console.log(
-      `[API_CALL] Pidiendo reservas para SpaceID: ${spaceId} en Fecha: ${dateString}`
-    );
     const response = await apiService.get(
       `/reservations/availability/${spaceId}`,
       {
@@ -84,7 +81,6 @@ export const getReservationsForSpaceAndDate = async (
     );
 
     return response.data;
-    console.log("[API_RESPONSE] Datos recibidos:", response.data);
   } catch (error: any) {
     console.error(
       `Error fetching reservations for space ${spaceId} on ${date}:`,

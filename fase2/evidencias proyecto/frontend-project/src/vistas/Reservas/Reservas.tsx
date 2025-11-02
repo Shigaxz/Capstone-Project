@@ -1,16 +1,9 @@
 
 import Nav from '../../componentes/Nav'
 import Footer from '../../componentes/Footer'
-import CardSedes from '../../componentes/CardSedes';
-import { useEffect, useState } from 'react';
-import { listaSedes } from '../../utils/sedesUtils'; 
-
 import LocationCards from '../../componentes/reservas/LocationCards';
 function Reservas() {
-  const [laslistaSedes, setListaSedes ] = useState(listaSedes);
-  useEffect(()=>{
-    setListaSedes(listaSedes)
-  },[])
+
 
   return (<>
     <Nav/>

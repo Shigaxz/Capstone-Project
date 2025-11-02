@@ -24,7 +24,8 @@ import {
 } from "date-fns";
 import { es } from "date-fns/locale";
 import EmailConfirmationModal from "./EmailConfirmationModal";
-
+import Navbar from '../../componentes/reservas/Navbar';
+import Footer from "../../componentes/Footer";
 const SeleccionHorario: React.FC = () => {
   const { idLocation, idSpace } = useParams<{
     idLocation: string;
@@ -55,7 +56,7 @@ const SeleccionHorario: React.FC = () => {
 
     try {
       const data = await getReservationsForSpaceAndDate(idSpace, selectedDate);
-      console.log('Reservas recibidas del Backend:', data);
+      console.log("Reservas recibidas del Backend:", data);
       setExistingReservations(data);
     } catch (err: any) {
       setError(err.message || "Error al cargar disponibilidad");
@@ -190,16 +191,13 @@ const SeleccionHorario: React.FC = () => {
   };
   return (
     <div className="bg-slate-50 min-h-screen">
+        <Navbar 
+        buttonText="Volver a Espacios" 
+        buttonPath={`/reservas/${idLocation}`}
+      />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Botón para volver a la selección de espacios */}
-        <div className="mb-6">
-          <Link
-            to={`/reservas/${idLocation}`}
-            className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            &larr; Volver a Espacios
-          </Link>
-        </div>
+        
+
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold font-sans text-gray-800">
             Selecciona un Horario
@@ -288,7 +286,13 @@ const SeleccionHorario: React.FC = () => {
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
               {timeSlots.map((slot: Date) => {
-                const available = isSlotAvailable(slot);
+                const isReserved = existingReservations.some((res) => {
+                  const resStart = new Date(res.startTime);
+                  const resEnd = new Date(res.endTime);
+                  return slot >= resStart && slot < resEnd;
+                });
+
+                const available = !isReserved && isSlotAvailable(slot);
                 const isSelected = selectedSlot && isEqual(slot, selectedSlot);
 
                 return (
@@ -342,6 +346,7 @@ const SeleccionHorario: React.FC = () => {
           duration={duration}
         />
       </div>
+      <Footer/>
     </div>
   );
 };

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; }
+    .container { width: 90%; margin: auto; padding: 20px; }
+    .header { font-size: 24px; color: #012C56; }
+    .content { margin-top: 20px; }
+    .details { background-color: #f9f9f9; border-left: 5px solid #012C56; padding: 15px; }
+    .footer { font-size: 0.9em; color: #777; margin-top: 20px; }
+    strong { color: #012C56; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="header">¡Reserva Aprobada!</h2>
+    <div class="content">
+      <p>Hola {{emailUsuario}},</p>
+      <p>Tu solicitud de reserva para el espacio <strong>{{spaceName}}</strong> ha sido aprobada.</p>
+      <hr style="border: 0; border-top: 1px solid #eee;" />
+      <div class="details">
+        <p><strong>Detalles de tu Reserva:</strong></p>
+        <ul>
+          <li><strong>Espacio:</strong> {{spaceName}}</li>
+          <li><strong>Día:</strong> {{fechaReserva}}</li>
+          <li><strong>Horario:</strong> {{horaInicio}} a {{horaFin}}</li>
+        </ul>
+      </div>
+      <hr style="border: 0; border-top: 1px solid #eee;" />
+      <p>Gracias por utilizar el sistema de reservas del CITT.</p>
+    </div>
+    <p class="footer">Este es un correo automático, por favor no responder.</p>
+  </div>
+</body>
+</html>

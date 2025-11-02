@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -22,14 +23,16 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
           </button>
 
           <div className="flex items-center">
-            <img 
-              src="/images/logo.png" 
-              alt="Logo CITT"
-              className="h-10 w-auto mr-4"
-            />
-            <span className="text-xl font-bold text-white">
-              Sistema de Reservas y memorias
-            </span>
+            <Link to="/" className="flex items-center no-underline">
+          <img 
+            src="/images/logo.png" 
+            alt="Logo CITT"
+            className="h-10 w-auto mr-4"
+          />
+          <span className="text-xl font-bold text-white">
+            Sistema de Reservas y memorias
+          </span>
+        </Link>
           </div>
         </div>
 
