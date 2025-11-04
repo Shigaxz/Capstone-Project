@@ -4,6 +4,8 @@ import { getLocations } from '../../services/locationsApiServices';
 import type { Space, CreateSpaceData, UpdateSpaceData } from '../../interfaces/spaces';
 import { getSpacesByLocation, createSpace, updateSpace, deleteSpace } from '../../services/spacesApiServices';
 import SpaceFormModal from '../../componentes/componentes_admin/SpaceFormModal';
+import Alert from './Alert'; // Importar el componente Alert
+import ConfirmationModal from '../ConfirmationModal'; // 1. Importar el nuevo modal
 
 const SpaceManager: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -11,15 +13,26 @@ const SpaceManager: React.FC = () => {
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [loadingLocations, setLoadingLocations] = useState(false);
   const [loadingSpaces, setLoadingSpaces] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isSpaceModalOpen, setIsSpaceModalOpen] = useState(false);
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
+  
+  // 2. Estados para el modal de confirmación
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [deletingSpaceId, setDeletingSpaceId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [alertInfo, setAlertInfo] = useState<{ type: 'success' | 'error' | 'warning' | 'info'; title: string; message: string; isVisible: boolean }>({
+    type: 'info',
+    title: '',
+    message: '',
+    isVisible: false,
+  });
+
   // Carga los lugares al inicio para el selector
   useEffect(() => {
     setLoadingLocations(true);
     getLocations()
       .then(setLocations)
-      .catch(err => setError(err.message || 'Error al cargar lugares'))
+      .catch(err => setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al cargar lugares', isVisible: true }))
       .finally(() => setLoadingLocations(false));
   }, []);
 
@@ -34,31 +47,42 @@ const SpaceManager: React.FC = () => {
 
   const fetchSpaces = async (locationId: string) => {
     setLoadingSpaces(true);
-    setError(null);
+    setAlertInfo({ ...alertInfo, isVisible: false });
     try {
       const data = await getSpacesByLocation(locationId);
       setSpaces(data);
     } catch (err: any) {
-      setError(err.message || 'Error al cargar espacios');
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al cargar espacios', isVisible: true });
     } finally {
       setLoadingSpaces(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('¿Seguro que quieres eliminar este espacio?')) {
-      try {
-        await deleteSpace(id);
-        if (selectedLocationId) fetchSpaces(selectedLocationId); // Recarga
-        alert('Espacio eliminado.');
-      } catch (err: any) {
-        setError(err.message || 'Error al eliminar');
-      }
+  // 3. Abre el modal de confirmación
+  const handleDeleteRequest = (id: string) => {
+    setDeletingSpaceId(id);
+    setIsConfirmModalOpen(true);
+  };
+
+  // 4. Ejecuta la eliminación si se confirma
+  const handleConfirmDelete = async () => {
+    if (!deletingSpaceId) return;
+    setIsDeleting(true);
+    try {
+      await deleteSpace(deletingSpaceId);
+      if (selectedLocationId) fetchSpaces(selectedLocationId); // Recarga
+      setAlertInfo({ type: 'success', title: 'Éxito', message: 'Espacio eliminado correctamente.', isVisible: true });
+    } catch (err: any) {
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al eliminar el espacio.', isVisible: true });
+    } finally {
+      setIsDeleting(false);
+      setIsConfirmModalOpen(false);
+      setDeletingSpaceId(null);
     }
   };
 
   const handleAdd = () => {
-    if (!selectedLocationId) return alert('Selecciona un lugar primero');
+    if (!selectedLocationId) return setAlertInfo({ type: 'warning', title: 'Atención', message: 'Selecciona un lugar primero para añadir un espacio.', isVisible: true });
     setEditingSpace(null);
     setIsSpaceModalOpen(true);
   };
@@ -77,10 +101,10 @@ const SpaceManager: React.FC = () => {
     try {
       if (editingSpace) {
         await updateSpace(editingSpace._id, data);
-        alert('Espacio actualizado con éxito.');
+        setAlertInfo({ type: 'success', title: 'Éxito', message: 'Espacio actualizado con éxito.', isVisible: true });
       } else if (selectedLocationId) {
         await createSpace(selectedLocationId, data as CreateSpaceData);
-        alert('Espacio creado con éxito.');
+        setAlertInfo({ type: 'success', title: 'Éxito', message: 'Espacio creado con éxito.', isVisible: true });
       }
       if (selectedLocationId) fetchSpaces(selectedLocationId);
     } catch (err: any) {
@@ -102,7 +126,15 @@ const SpaceManager: React.FC = () => {
         )}
       </div>
 
-      {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
+      <div className="mb-4">
+        <Alert
+          type={alertInfo.type}
+          title={alertInfo.title}
+          message={alertInfo.message}
+          isVisible={alertInfo.isVisible}
+          onClose={() => setAlertInfo({ ...alertInfo, isVisible: false })}
+        />
+      </div>
 
       {/* --- Selector de Lugar --- */}
       <div className="mb-6">
@@ -147,7 +179,7 @@ const SpaceManager: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{space.isAvailable ? 'Sí' : 'No'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                       <button onClick={() => handleEdit(space)} className="text-yellow-600 hover:text-yellow-900">Editar</button>
-                      <button onClick={() => handleDelete(space._id)} className="text-red-600 hover:text-red-900">Eliminar</button>
+                      <button onClick={() => handleDeleteRequest(space._id)} className="text-red-600 hover:text-red-900">Eliminar</button>
                     </td>
                   </tr>
                 ))}
@@ -165,6 +197,16 @@ const SpaceManager: React.FC = () => {
         onSubmit={handleSubmitSpaceForm}
         initialData={editingSpace}
         locationId={selectedLocationId}
+      />
+      {/* 5. Renderizar el modal de confirmación */}
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirmar Eliminación"
+        message="¿Estás seguro de que quieres eliminar este espacio? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        loading={isDeleting}
       />
     </div>
   );

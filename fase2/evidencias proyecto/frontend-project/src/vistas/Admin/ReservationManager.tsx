@@ -9,7 +9,9 @@ import {
 import type { Reservation, CreateReservationData } from "../../interfaces/reservations";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
+import Alert from './Alert'; // Importar el componente Alert
 import ReservationFormModal from "../../componentes/componentes_admin/ReservationFormModal";
+import ConfirmationModal from "../ConfirmationModal";
 
 const ReservationManager: React.FC = () => {
   const [pendingReservations, setPendingReservations] = useState<Reservation[]>(
@@ -20,20 +22,29 @@ const ReservationManager: React.FC = () => {
   );
   const [loadingPending, setLoadingPending] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"pending" | "history">("pending");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [rejectingReservationId, setRejectingReservationId] = useState<string | null>(null);
+  const [isRejecting, setIsRejecting] = useState(false);
+
+  const [alertInfo, setAlertInfo] = useState<{ type: 'success' | 'error' | 'warning' | 'info'; title: string; message: string; isVisible: boolean }>({
+    type: 'info',
+    title: '',
+    message: '',
+    isVisible: false,
+  });
 
   // Función para cargar datos (reutilizable)
   const fetchData = useCallback(async () => {
-    setError(null);
+    setAlertInfo({ ...alertInfo, isVisible: false });
     if (viewMode === "pending") {
       setLoadingPending(true);
       try {
         const data = await getPendingReservations();
         setPendingReservations(data);
       } catch (err: any) {
-        setError(err.message || "Error al cargar pendientes");
+        setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al cargar pendientes', isVisible: true });
       } finally {
         setLoadingPending(false);
       }
@@ -48,7 +59,7 @@ const ReservationManager: React.FC = () => {
         );
         setHistoryReservations(data);
       } catch (err: any) {
-        setError(err.message || "Error al cargar historial");
+        setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al cargar historial', isVisible: true });
       } finally {
         setLoadingHistory(false);
       }
@@ -64,20 +75,32 @@ const ReservationManager: React.FC = () => {
   const handleApprove = async (id: string) => {
     try {
       await approveReservation(id);
-      alert("Reserva aprobada con éxito. Se ha notificado al usuario.");
+      setAlertInfo({ type: 'success', title: 'Éxito', message: 'Reserva aprobada con éxito. Se ha notificado al usuario.', isVisible: true });
       fetchData(); // Recarga la lista actual (pendientes desaparecerá)
     } catch (err: any) {
-      setError(err.message || "Error al aprobar");
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al aprobar', isVisible: true });
     }
   };
 
-  const handleReject = async (id: string) => {
+  const handleRejectRequest = (id: string) => {
+    setRejectingReservationId(id);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmReject = async () => {
+    if (!rejectingReservationId) return;
+
+    setIsRejecting(true);
     try {
-      await rejectReservation(id);
-      alert("Reserva rechazada con éxito. Se ha notificado al usuario.");
+      await rejectReservation(rejectingReservationId);
+      setAlertInfo({ type: 'success', title: 'Éxito', message: 'Reserva rechazada con éxito. Se ha notificado al usuario.', isVisible: true });
       fetchData(); // Recarga la lista actual (pendientes desaparecerá)
     } catch (err: any) {
-      setError(err.message || "Error al rechazar");
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al rechazar', isVisible: true });
+    } finally {
+      setIsRejecting(false);
+      setIsConfirmModalOpen(false);
+      setRejectingReservationId(null);
     }
   };
 
@@ -92,7 +115,7 @@ const ReservationManager: React.FC = () => {
   const handleSubmitCreateForm = async (data: CreateReservationData) => {
     try {
       await createReservation(data);
-      alert("Reserva creada con éxito (quedará pendiente de aprobación).");
+      setAlertInfo({ type: 'success', title: 'Éxito', message: 'Reserva creada con éxito (quedará pendiente de aprobación).', isVisible: true });
       fetchData(); // Recarga la lista de pendientes
     } catch (err: any) {
       throw err; // Pasa el error al modal
@@ -129,11 +152,15 @@ const ReservationManager: React.FC = () => {
         </button>
       </div>
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
+      <div className="mb-4">
+        <Alert
+          type={alertInfo.type}
+          title={alertInfo.title}
+          message={alertInfo.message}
+          isVisible={alertInfo.isVisible}
+          onClose={() => setAlertInfo({ ...alertInfo, isVisible: false })}
+        />
+      </div>
 
       <div className="mb-4 border-b border-gray-200">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
@@ -212,7 +239,7 @@ const ReservationManager: React.FC = () => {
                         Aprobar
                       </button>
                       <button
-                        onClick={() => handleReject(res._id)}
+                        onClick={() => handleRejectRequest(res._id)}
                         className="text-red-600 hover:text-red-900"
                       >
                         Rechazar
@@ -306,6 +333,15 @@ const ReservationManager: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={handleCloseCreateModal}
         onSubmit={handleSubmitCreateForm}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmReject}
+        title="Confirmar Rechazo"
+        message="¿Estás seguro de que quieres rechazar esta reserva? Esta acción no se puede deshacer."
+        confirmText="Rechazar"
+        loading={isRejecting}
       />
     </div>
   );

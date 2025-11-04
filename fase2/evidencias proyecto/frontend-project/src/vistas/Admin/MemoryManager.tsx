@@ -3,14 +3,25 @@
 import React, { useState, useEffect } from 'react';
 import { getMemories, deleteMemory, updateMemory, createMemory } from '../../services/memoriesApiService';
 import type { Memory, CreateMemoryData, UpdateMemoryData } from '../../interfaces/memories';
+import Alert from './Alert'; // Importar el componente Alert
 import MemoryFormModal from '../../componentes/componentes_admin/MemoryFormModal';
+import ConfirmationModal from '../ConfirmationModal';
 
 const MemoryManager: React.FC = () => {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [deletingMemoryId, setDeletingMemoryId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [alertInfo, setAlertInfo] = useState<{ type: 'success' | 'error' | 'warning' | 'info'; title: string; message: string; isVisible: boolean }>({
+    type: 'info',
+    title: '',
+    message: '',
+    isVisible: false,
+  });
 
   useEffect(() => {
     fetchMemories();
@@ -18,26 +29,36 @@ const MemoryManager: React.FC = () => {
 
   const fetchMemories = async () => {
     setLoading(true);
-    setError(null);
+    setAlertInfo({ ...alertInfo, isVisible: false });
     try {
       const data = await getMemories();
       setMemories(data);
     } catch (err: any) {
-      setError(err.message || 'Error al cargar memorias');
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al cargar memorias', isVisible: true });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('¿Seguro que quieres eliminar esta memoria?')) {
-      try {
-        await deleteMemory(id);
-        fetchMemories(); // Recarga la lista
-        alert('Memoria eliminada.');
-      } catch (err: any) {
-        setError(err.message || 'Error al eliminar');
-      }
+  const handleDeleteRequest = (id: string) => {
+    setDeletingMemoryId(id);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingMemoryId) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteMemory(deletingMemoryId);
+      fetchMemories(); // Recarga la lista
+      setAlertInfo({ type: 'success', title: 'Éxito', message: 'Memoria eliminada correctamente.', isVisible: true });
+    } catch (err: any) {
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al eliminar la memoria.', isVisible: true });
+    } finally {
+      setIsDeleting(false);
+      setIsConfirmModalOpen(false);
+      setDeletingMemoryId(null);
     }
   };
 
@@ -61,11 +82,11 @@ const MemoryManager: React.FC = () => {
       if (editingMemory) {
         // Lógica de Actualización
         await updateMemory(editingMemory._id, data); 
-        alert('Memoria actualizada con éxito.');
+        setAlertInfo({ type: 'success', title: 'Éxito', message: 'Memoria actualizada con éxito.', isVisible: true });
       } else {
         // Lógica de Creación
         await createMemory(data as CreateMemoryData); 
-        alert('Memoria creada con éxito.');
+        setAlertInfo({ type: 'success', title: 'Éxito', message: 'Memoria creada con éxito.', isVisible: true });
       }
       fetchMemories(); // Recarga la lista
     } catch (err: any) {
@@ -86,7 +107,15 @@ const MemoryManager: React.FC = () => {
         </button>
       </div>
 
-      {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
+      <div className="mb-4">
+        <Alert
+          type={alertInfo.type}
+          title={alertInfo.title}
+          message={alertInfo.message}
+          isVisible={alertInfo.isVisible}
+          onClose={() => setAlertInfo({ ...alertInfo, isVisible: false })}
+        />
+      </div>
       
       {loading ? (
         <p>Cargando...</p>
@@ -109,7 +138,7 @@ const MemoryManager: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{memory.teacher}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                     <button onClick={() => handleEdit(memory)} className="text-yellow-600 hover:text-yellow-900">Editar</button>
-                    <button onClick={() => handleDelete(memory._id)} className="text-red-600 hover:text-red-900">Eliminar</button>
+                    <button onClick={() => handleDeleteRequest(memory._id)} className="text-red-600 hover:text-red-900">Eliminar</button>
                   </td>
                 </tr>
               ))}
@@ -126,6 +155,15 @@ const MemoryManager: React.FC = () => {
         onClose={handleCloseModal}
         onSubmit={handleSubmitForm}
         initialData={editingMemory}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirmar Eliminación"
+        message="¿Estás seguro de que quieres eliminar esta memoria? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        loading={isDeleting}
       />
     </div>
   );

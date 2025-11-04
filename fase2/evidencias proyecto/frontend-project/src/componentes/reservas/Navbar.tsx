@@ -17,7 +17,7 @@ const HeaderPublic: React.FC<HeaderPublicProps> = ({ buttonText, buttonPath }) =
           <img 
             src="/images/logo.png" 
             alt="Logo CITT"
-            className="h-10 w-auto mr-4"
+            className="h-10 w-auto mr-4 md:block hidden"
           />
           <span className="text-xl font-bold text-white">
             Sistema de Reservas y memorias
@@ -25,7 +25,7 @@ const HeaderPublic: React.FC<HeaderPublicProps> = ({ buttonText, buttonPath }) =
         </Link>
         </div>
 
-        <div>
+        <div className='md:w-auto w-full'>
           <Link 
             to={buttonPath} 
             className="

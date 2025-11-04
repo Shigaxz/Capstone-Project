@@ -8,9 +8,9 @@ const CardMenu = () => {
         <h3 className='itext text-left mb-6'> 
             <i>Entérate de lo que está pasando en nuestras escuelas</i>
         </h3> 
-      <div className="flex justify-center gap-6 md:gap-8">
-
-        <div className="card">
+      <div className="md:flex justify-center  gap-6 md:gap-8 ">
+        <div className='flex justify-center mb-3'>
+          <div className="card">
           <img
             src="https://www.duoc.cl/wp-content/uploads/2025/02/slider_web_online_2025C-960x600.png"
             className="card-image"
@@ -19,7 +19,10 @@ const CardMenu = () => {
           <p className="card-text">Reserva un espacio</p>
           <Link to="/reservas"><button className="card-button">Reservar</button></Link>
         </div>
-        <div className="card">
+        </div>
+
+        <div className='flex justify-center'>
+                  <div className="card">
           <img
             src="https://www.duoc.cl/wp-content/uploads/2025/02/slider_web_online_2025C-960x600.png"
             className="card-image"
@@ -28,6 +31,8 @@ const CardMenu = () => {
           <p className="card-text">Nuestros Estudiantes</p>
           <Link to="/memorias"><button className="card-button">Ver Memorias</button></Link>
         </div>
+        </div>
+
       </div>
     </div>
   );

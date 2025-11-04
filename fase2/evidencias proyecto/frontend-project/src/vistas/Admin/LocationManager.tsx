@@ -10,14 +10,25 @@ import {
   createLocation,
   updateLocation,
 } from "../../services/locationsApiServices";
+import Alert from './Alert'; // Importar el componente Alert
 import LocationFormModal from "../../componentes/componentes_admin/LocationFormModal";
+import ConfirmationModal from "../ConfirmationModal";
 
 const LocationManager: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [deletingLocationId, setDeletingLocationId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [alertInfo, setAlertInfo] = useState<{ type: 'success' | 'error' | 'warning' | 'info'; title: string; message: string; isVisible: boolean }>({
+    type: 'info',
+    title: '',
+    message: '',
+    isVisible: false,
+  });
 
   useEffect(() => {
     fetchLocations();
@@ -25,26 +36,36 @@ const LocationManager: React.FC = () => {
 
   const fetchLocations = async () => {
     setLoading(true);
-    setError(null);
+    setAlertInfo({ ...alertInfo, isVisible: false });
     try {
       const data = await getLocations();
       setLocations(data);
     } catch (err: any) {
-      setError(err.message || "Error al cargar lugares");
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al cargar lugares', isVisible: true });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm("¿Seguro que quieres eliminar este lugar?")) {
-      try {
-        await deleteLocation(id);
-        fetchLocations(); // Recarga la lista
-        alert("Lugar eliminado.");
-      } catch (err: any) {
-        setError(err.message || "Error al eliminar");
-      }
+  const handleDeleteRequest = (id: string) => {
+    setDeletingLocationId(id);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingLocationId) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteLocation(deletingLocationId);
+      fetchLocations(); // Recarga la lista
+      setAlertInfo({ type: 'success', title: 'Éxito', message: 'Lugar eliminado correctamente.', isVisible: true });
+    } catch (err: any) {
+      setAlertInfo({ type: 'error', title: 'Error', message: err.message || 'Error al eliminar el lugar.', isVisible: true });
+    } finally {
+      setIsDeleting(false);
+      setIsConfirmModalOpen(false);
+      setDeletingLocationId(null);
     }
   };
 
@@ -69,10 +90,10 @@ const LocationManager: React.FC = () => {
     try {
       if (editingLocation) {
         await updateLocation(editingLocation._id, data);
-        alert("Lugar actualizado con éxito.");
+        setAlertInfo({ type: 'success', title: 'Éxito', message: 'Lugar actualizado con éxito.', isVisible: true });
       } else {
         await createLocation(data as CreateLocationData);
-        alert("Lugar creado con éxito.");
+        setAlertInfo({ type: 'success', title: 'Éxito', message: 'Lugar creado con éxito.', isVisible: true });
       }
       fetchLocations();
     } catch (err: any) {
@@ -92,11 +113,15 @@ const LocationManager: React.FC = () => {
         </button>
       </div>
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
+      <div className="mb-4">
+        <Alert
+          type={alertInfo.type}
+          title={alertInfo.title}
+          message={alertInfo.message}
+          isVisible={alertInfo.isVisible}
+          onClose={() => setAlertInfo({ ...alertInfo, isVisible: false })}
+        />
+      </div>
 
       {loading ? (
         <p>Cargando...</p>
@@ -139,7 +164,7 @@ const LocationManager: React.FC = () => {
                       Editar
                     </button>
                     <button
-                      onClick={() => handleDelete(location._id)}
+                      onClick={() => handleDeleteRequest(location._id)}
                       className="text-red-600 hover:text-red-900"
                     >
                       Eliminar
@@ -163,6 +188,15 @@ const LocationManager: React.FC = () => {
         onClose={handleCloseModal}
         onSubmit={handleSubmitForm}
         initialData={editingLocation}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirmar Eliminación"
+        message="¿Estás seguro de que quieres eliminar este lugar? Todos los espacios asociados también serán eliminados. Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        loading={isDeleting}
       />
     </div>
   );
