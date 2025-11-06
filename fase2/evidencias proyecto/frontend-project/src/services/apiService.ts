@@ -39,5 +39,22 @@ if (token) {
   setAuthToken(token);
 }
 
+apiService.interceptors.response.use(
+  // Función: Si la respuesta es exitosa, no hagas nada.
+  (response) => {
+    return response;
+  },
+  // Función: Si la respuesta es un error
+  (error) => {
+    // Verificamos si el error es un 401
+    if (error.response && error.response.status === 401) {
+      // Si es 401, llamamos a la función de logout.
+      logout();
+    }
+    // Rechazamos la promesa para que el componente que hizo la llamada
+    return Promise.reject(error);
+  }
+);
+
 // Exporta la instancia configurada
 export default apiService;

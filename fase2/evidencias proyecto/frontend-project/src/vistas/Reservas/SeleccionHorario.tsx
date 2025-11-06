@@ -31,7 +31,6 @@ const SeleccionHorario: React.FC = () => {
     idLocation: string;
     idSpace: string;
   }>();
-  console.log("ID del Espacio leído desde la URL (idSpace):", idSpace);
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState<Date>(
@@ -69,7 +68,7 @@ const SeleccionHorario: React.FC = () => {
   const timeSlots = useMemo(() => {
     const slots: Date[] = [];
     const startHour = 8;
-    const endHour = 18;
+    const endHour = 22;
     const interval = 30;
 
     let currentTime = setMinutes(setHours(selectedDate, startHour), 0);

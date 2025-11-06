@@ -13,6 +13,7 @@ import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiHeader({
   name: 'x-api-key',
@@ -39,12 +40,14 @@ export class ReservationsController {
   }
 
   @Get('pending')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Obtener todas las reservas pendientes' })
   findAllPending() {
     return this.reservationsService.findAllPending();
   }
 
   @Get('history')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
     summary: 'Obtener historial de reservas aprobadas/rechazadas',
   })
@@ -53,12 +56,14 @@ export class ReservationsController {
   }
 
   @Patch(':id/approve')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Aprobar una reserva' })
   approve(@Param('id', ParseMongoIdPipe) id: string) {
     return this.reservationsService.approve(id);
   }
 
   @Patch(':id/reject')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Rechazar una reserva' })
   reject(@Param('id', ParseMongoIdPipe) id: string) {
     return this.reservationsService.reject(id);

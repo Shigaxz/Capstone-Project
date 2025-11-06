@@ -6,7 +6,10 @@ import {
   HttpStatus,
   UsePipes,
   ValidationPipe,
+  Get,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { LoginDto } from './dto/login.dto';
@@ -41,5 +44,14 @@ export class AdminController {
   @UsePipes(new ValidationPipe({ whitelist: true })) // Valida y limpia el DTO
   async login(@Body() loginDto: LoginDto) { // Funcion Login del servicio
     return this.adminService.login(loginDto);
+  }
+// Metodo para validar el token JWT de un administrador
+  @Get('check-status')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Verifica si el token JWT del admin es válido' })
+  @ApiResponse({ status: 200, description: 'Token válido.' })
+  @ApiResponse({ status: 401, description: 'Token inválido o expirado.' })
+  checkAdminStatus() {
+    return { status: 'ok' };
   }
 }

@@ -14,7 +14,7 @@ import { UpdateSpaceDto } from './dto/update-space.dto';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { Space } from './schemas/space.schema';
-
+import { AuthGuard } from '@nestjs/passport';
 @ApiHeader({ 
   name: 'x-api-key',
   description: 'Clave de API para autorización de la solicitud',
@@ -46,6 +46,7 @@ export class SpacesController {
 
   // Metodo Patch: Para actualizar el Lugar por Id
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Actualizar un espacio existente' })
   @ApiResponse({ status: 200, description: 'Devuelve el espacio actualizado.', type: Space })
   @ApiResponse({ status: 404, description: 'Espacio no encontrado.' })
@@ -59,6 +60,7 @@ export class SpacesController {
 
   // Metodo Delete: Para borrrar el Lugar por Id
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar un espacio por su ID' })
   @ApiResponse({ status: 204, description: 'El espacio fue eliminado exitosamente.' })

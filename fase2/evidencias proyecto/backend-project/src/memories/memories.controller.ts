@@ -23,6 +23,7 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { Memory } from './schemas/memory.schema';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiHeader({
   name: 'x-api-key',
@@ -36,6 +37,7 @@ export class MemoriesController {
 
   // Metodo Post: Para agregar Memorias
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Crear una nueva memoria (con URLs)' })
   @ApiResponse({
     status: 201,
@@ -79,6 +81,7 @@ export class MemoriesController {
 
   // Metodo patch: Para actualizar una memoria
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Actualiza una memoria con el id' })
   @ApiResponse({
     status: 200,
@@ -96,6 +99,7 @@ export class MemoriesController {
 
   // Metodo delete: Para borrar una memoria
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Borra una memoria con el id' })
   @ApiResponse({
     status: 204,

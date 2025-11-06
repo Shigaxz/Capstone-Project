@@ -19,6 +19,7 @@ import { CreateSpaceDto } from '../spaces/dto/create-space.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { Space } from '../spaces/schemas/space.schema';
 import { Location } from './schemas/locations.schemas';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiHeader({ 
   name: 'x-api-key',
@@ -33,6 +34,7 @@ export class LocationsController {
     private readonly spacesService: SpacesService,) {}
   // Metodo Post: Para agregar Lugares
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Crear un nuevo lugar' })
   @ApiResponse({ status: 201, description: 'El lugar fue creado exitosamente.', type: Location })
@@ -64,6 +66,7 @@ export class LocationsController {
 
   // Metodo Patch: Para actualizar el Lugar
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Actualizar un lugar existente' })
   @ApiResponse({ status: 200, description: 'Devuelve el lugar actualizado.', type: Location })
   @ApiResponse({ status: 404, description: 'Lugar no encontrado.' })
@@ -77,6 +80,7 @@ export class LocationsController {
 
   // Metodo Delete: Para eliminar el Lugar
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar un lugar por su ID' })
   @ApiResponse({ status: 204, description: 'El lugar fue eliminado exitosamente.' })
@@ -87,6 +91,7 @@ export class LocationsController {
   }
   // Metodo Post: Para agregar espacio por con Lugar Id
   @Post(':locationId/spaces')
+  @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Crear un nuevo espacio dentro de un lugar' })
   @ApiResponse({ status: 201, description: 'El espacio fue creado exitosamente.', type: Space })
