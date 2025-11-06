@@ -1,40 +1,52 @@
 import './componentes_css/CardMenu.css';
 import { Link } from 'react-router-dom';
 
+import image1 from '../assets/imgBiblio/E_Biblioteca_1.jpg';
+import image2 from '../assets/imgSedes/sede_maipu-1.jpg';
+
+
+
 const CardMenu = () => {
   return (
-    <div className='container mt-8 mx-auto px-4'> 
-        <h1 className="text-4xl text-left">Nuestros espacios</h1>
-        <h3 className='itext text-left mb-6'> 
-            <i>Entérate de lo que está pasando en nuestras escuelas</i>
-        </h3> 
-      <div className="md:flex justify-center  gap-6 md:gap-8 ">
-        <div className='flex justify-center mb-3'>
-          <div className="card">
-          <img
-            src="https://www.duoc.cl/wp-content/uploads/2025/02/slider_web_online_2025C-960x600.png"
-            className="card-image"
-            alt="Reserva de espacios"
-          />
-          <p className="card-text">Reserva un espacio</p>
-          <Link to="/reservas"><button className="card-button">Reservar</button></Link>
-        </div>
-        </div>
-
-        <div className='flex justify-center'>
-                  <div className="card">
-          <img
-            src="https://www.duoc.cl/wp-content/uploads/2025/02/slider_web_online_2025C-960x600.png"
-            className="card-image"
-            alt="Memorias"
-          />
-          <p className="card-text">Nuestros Estudiantes</p>
-          <Link to="/memorias"><button className="card-button">Ver Memorias</button></Link>
-        </div>
-        </div>
-
+<div className="container mt-10 mx-auto px-4">
+  <h1 className="text-4xl text-left">Nuestros espacios</h1>
+  <h3 className="itext text-left mb-6">
+    <i>Entérate de lo que está pasando en nuestras escuelas</i>
+  </h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+    <Link to="/reservas">
+    <div className="relative group overflow-hidden  shadow-lg cursor-pointer h-80">
+      <img
+        src={image1}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-0"
+      />
+      <div className="absolute inset-0 flex items-center justify-center z-20">
+        <h2 className="text-white italic text-3xl md:text-4xl font-semibold tracking-wide text-center drop-shadow-lg transition-transform duration-500 group-hover:translate-y-[-4px]">
+          Reserva de espacios
+        </h2>
       </div>
     </div>
+    </Link>
+    <Link to="/memorias">
+    <div className="relative group overflow-hidden  shadow-lg cursor-pointer h-80">
+      <img
+        src={image2}
+        alt="Sedes y Campus"
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-0"
+      />
+      <div className="absolute inset-0 flex items-center justify-center z-20">
+          <h2 className="text-white italic text-3xl md:text-4xl font-semibold tracking-wide text-center drop-shadow-lg transition-transform duration-500 group-hover:translate-y-[-4px]">
+          Memorias 
+        </h2>
+      </div>
+    </div>
+    </Link>
+  </div>
+</div>
+
+ 
+
+
   );
 };
 
