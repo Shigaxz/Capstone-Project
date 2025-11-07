@@ -28,7 +28,7 @@ function Memorias() {
   return (
     <>
       <Nav/>
-         <div className="container mt-5 flex ml-5">
+         <div className="container mt-5 flex ml-2">
         <Link
           to="/"
           className="mb-4 px-4 underline italic"
@@ -37,7 +37,7 @@ function Memorias() {
         </Link>
       </div>
 
-      <div className='container mt-8 ml-5'>
+      <div className='container mt-5 ml-5'>
         <h1 className="text-2xl">Memorias</h1>
         <h3 className='itext'>
           <i>Entérate de lo que está pasando en nuestras escuelas</i>
