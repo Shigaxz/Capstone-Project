@@ -5,15 +5,21 @@ import {
   Get,
   Patch,
   Param,
+  Delete,
   UseGuards,
   Query,
   BadRequestException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiQuery } from '@nestjs/swagger';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
+import { FindReservationsQueryDto } from './dto/find-reservations-query.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
+
 
 @ApiHeader({
   name: 'x-api-key',
@@ -26,6 +32,8 @@ export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
   @Post()
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 5, ttl: 120000 } })// 5 peticiones cada 2 minutos
   @ApiOperation({ summary: 'Crear una nueva solicitud de reserva' })
   @ApiResponse({
     status: 201,
@@ -88,5 +96,31 @@ export class ReservationsController {
       );
     }
     return this.reservationsService.findAvailabilityBySpace(spaceId, date);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({
+    summary: 'Obtener todas las reservas con filtros (Admin)',
+    description:
+      'Obtiene una lista de reservas. Permite filtrar por espacioId, fecha (YYYY-MM-DD), y estado (true, false, null). Si no se envían filtros, trae todo.',
+  })
+  @ApiQuery({ name: 'espacioId', required: false, type: String })
+  @ApiQuery({ name: 'date', required: false, type: String, example: '2025-10-31' })
+  @ApiQuery({ name: 'isApproved', required: false, enum: ['true', 'false', 'null'] })
+  @ApiResponse({ status: 200, description: 'Lista de reservas filtradas.' })
+  findAll(@Query() queryDto: FindReservationsQueryDto) {
+    return this.reservationsService.findAll(queryDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Eliminar una reserva por ID (Admin)' })
+  @ApiResponse({ status: 204, description: 'Reserva eliminada exitosamente.' })
+  @ApiResponse({ status: 403, description: 'Acceso denegado.' })
+  @ApiResponse({ status: 404, description: 'Reserva no encontrada.' })
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.reservationsService.remove(id);
   }
 }

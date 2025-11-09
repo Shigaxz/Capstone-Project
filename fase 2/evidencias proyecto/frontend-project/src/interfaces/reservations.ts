@@ -17,3 +17,9 @@ export interface CreateReservationData {
   startTime: string;
   duration: number;
 }
+
+export interface FindReservationsParams {
+  espacioId?: string;
+  date?: string;
+  isApproved?: 'true' | 'false' | 'null' | 'all';
+}
