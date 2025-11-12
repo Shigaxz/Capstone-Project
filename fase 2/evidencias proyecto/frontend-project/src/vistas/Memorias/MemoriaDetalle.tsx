@@ -45,25 +45,23 @@ const MemoriaDetalle = () => {
       <div className="container mt-8 flex flex-col md:flex-row items-center md:items-start gap-8 px-4 md:px-10">
         {memoria.images.length > 0 && (
           <img
-            src={memoria.images[0]} // primera imagen
-            className="w-full max-w-md rounded-lg shadow-lg object-cover"
-            alt={memoria.title}
+            src={memoria.images[0]} 
+            className="w-[500px] h-[400px] rounded-lg shadow-lg object-cover"
           />
         )}
 
         <div className="flex flex-col justify-center text-center md:text-left">
-          <h1 className="text-2xl font-semibold mb-4">{memoria.title}</h1>
+          <h1 className="text-4xl  mb-4">{memoria.title}</h1>
           
-          <p className=" leading-relaxed">
-            <strong>Docente:</strong> {memoria.teacher}<br />
-            <strong>Miembros:</strong> {memoria.members.join(', ')}<br />
-            {memoria.company && <><strong>Compañía:</strong> {memoria.company}<br /></>}
-            <strong>Año:</strong> {memoria.year}<br /><br />
-          
+          <p className="leading-relaxed ">
+            <strong>Miembros:</strong> {memoria.members.join(', ')}
+            <p className="text-gray-700 leading-relaxed mt-5">{memoria.description}</p>
+            <p className='mt-5'><strong>Docente:</strong> {memoria.teacher}</p>
+            <p className='mt-8'> {memoria.company && <><strong>Compañía:</strong> {memoria.company}<br /></>} 
+            <strong>Año:</strong> {memoria.year}</p>
             
           </p>
-            <p className="text-gray-700 leading-relaxed">{memoria.description}</p>
-
+                    
           <p className='text-gray-700 mt-5'>{memoria.createdAt && <em>Creada el: {new Date(memoria.createdAt).toLocaleDateString()}</em>}</p>
         </div>
       </div>

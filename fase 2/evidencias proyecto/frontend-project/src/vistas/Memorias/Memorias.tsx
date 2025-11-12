@@ -5,6 +5,8 @@ import CardMemorias from './CardMemorias';
 import type { Memory } from '../../interfaces/memories';
 import { getMemories } from '../../services/memoriesApiService';
 import { Link } from 'react-router-dom';
+import CardMemoria from '../../componentes/memorias/CardMemoria';
+
 
 function Memorias() {
   const [memorias, setMemorias] = useState<Memory[]>([]);
@@ -36,11 +38,11 @@ function Memorias() {
           ← Volver a Principal
         </Link>
       </div>
-
+      <CardMemoria/>
       <div className='container mt-5 ml-5'>
         <h1 className="text-2xl">Memorias</h1>
         <h3 className='itext'>
-          <i>Entérate de lo que está pasando en nuestras escuelas</i>
+          <i>Entérate de lo que está pasando en nuestras escuelas...</i>
         </h3> 
       </div>
 
