@@ -24,7 +24,7 @@ export class Memory {
   description: string;
 
   @Prop({ type: [String], default: [] })
-  images: string[]; // Array de enlaces
+  images: string[];
 }
 
 export const MemorySchema = SchemaFactory.createForClass(Memory);

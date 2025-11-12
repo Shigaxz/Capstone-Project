@@ -2,6 +2,7 @@ import apiService from "./apiService";
 import type {
   Reservation,
   CreateReservationData,
+  FindReservationsParams
 } from "../interfaces/reservations";
 import { format } from "date-fns";
 
@@ -87,5 +88,30 @@ export const getReservationsForSpaceAndDate = async (
       error.response?.data || error.message
     );
     throw error.response?.data || new Error("Error al obtener disponibilidad");
+  }
+};
+// Funcion para buscar reservas con filtros opcionales
+export const findReservations = async (
+  params: FindReservationsParams = {}
+): Promise<Reservation[]> => {
+  try {
+    const response = await apiService.get("/reservations", {
+      params: params
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error:", error.response?.data || error.message);
+    throw (
+      error.response?.data || new Error("Error al buscar reservas")
+    );
+  }
+};
+// Funcion para eliminar una reserva por ID
+export const deleteReservation = async (id: string): Promise<void> => {
+  try {
+    await apiService.delete(`/reservations/${id}`);
+  } catch (error: any) {
+    console.error(`Error deleting reservation ${id}:`, error.response?.data || error.message);
+    throw error.response?.data || new Error("Error al eliminar reserva");
   }
 };

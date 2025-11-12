@@ -10,6 +10,7 @@ import { MemoriesModule } from './memories/memories.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { join } from 'path';
 
 @Module({
@@ -17,6 +18,10 @@ import { join } from 'path';
     ConfigModule.forRoot({
       isGlobal: true, // Hace que ConfigModule esté disponible en toda la app
     }),
+    ThrottlerModule.forRoot([{
+      ttl: 120000, // 2 minutos
+      limit: 5,  // 5 peticiones
+    }]),
     MongooseModule.forRootAsync({// Conexión asíncrona a MongoDB
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({ // Función que retorna la configuración de Mongoose
