@@ -28,7 +28,7 @@ function CardReserva(){
       <div className="h-2 w-full bg-yellow-400 mt-4"></div>
     </div>
 
-    {/* Imagen con altura controlada */}
+ 
     <div className="h-56 md:h-72">
       <img
         src={image1}
