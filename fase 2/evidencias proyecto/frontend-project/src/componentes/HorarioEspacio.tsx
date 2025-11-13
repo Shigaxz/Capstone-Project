@@ -37,8 +37,8 @@ const HorarioEspacio: React.FC<HorarioEspacioProps> = ({ nombreSede , espacioSed
                         {space.horarios.map((hor)=>(
                             <a onClick={()=>{handlerForm({
                                 sede:nombreSede,
-                                sedeImg:nomSede?.imagen,
-                                sedeDireccion:nomSede?.direccion,
+                                sedeImg:nomSede?.imagen|| '',
+                                sedeDireccion:nomSede?.direccion|| '',
                                 espacio:espacioSede,
                                 sitio:space.nombre,
                                 sitioImg:space.imagen,

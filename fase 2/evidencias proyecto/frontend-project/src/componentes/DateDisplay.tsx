@@ -20,7 +20,7 @@ const DateDisplay: React.FC<DateDisplayProps> = ({onChildData}) => {
     // Si la aplicación fuera de larga duración, podrías añadir un intervalo
     // para refrescar las fechas a medianoche, pero para 5 días
     // y la hora actual, con un solo cálculo es suficiente.
-    onChildData(getNextFiveDays().find((e,index)=>{
+    onChildData(getNextFiveDays().find((_,index)=>{
     return index == 0
   })?.dateString)
     setDates(getNextFiveDays());

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   getReservationsForSpaceAndDate,
   createReservation,
@@ -31,7 +31,6 @@ const SeleccionHorario: React.FC = () => {
     idLocation: string;
     idSpace: string;
   }>();
-  const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState<Date>(
     startOfDay(new Date())
