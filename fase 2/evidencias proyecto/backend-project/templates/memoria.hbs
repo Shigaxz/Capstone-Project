@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ficha de Memoria</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .container { border: 1px solid #ccc; border-radius: 8px; padding: 25px; position: relative;}
+    h1 { color: #000000; border-bottom: 2px solid #012C56; padding-bottom: 10px; font-family: 'Merriweather', serif;}
+    h2 { color: #000000; font-family: 'Merriweather', serif;}
+    .meta { background-color: #f9f9f9; padding: 15px; border-radius: 5px; }
+    .meta p { margin: 5px 0; }
+    .integrantes { margin-top: 20px; }
+    .integrantes li { margin-bottom: 5px; }
+    .imagen-memoria {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+    .description {
+      margin-top: 25px;
+      white-space: pre-wrap; 
+      line-height: 1.7;
+      text-align: justify; 
+    }
+    .header-logo {
+      position: absolute;
+      top: 25px; 
+      right: 25px; 
+      height: 60px;
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img 
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Logo_DuocUC.svg/330px-Logo_DuocUC.svg.png" 
+      class="header-logo" 
+      alt="Logo Instituto"
+    >
+    <h1>{{title}}</h1>
+    
+    <div class="meta">
+      <p><strong>Profesor Guía:</strong> {{teacher}}</p>
+      <p><strong>Año:</strong> {{year}}</p>
+      {{#if company}}
+        <p><strong>Empresa:</strong> {{company}}</p>
+      {{/if}}
+    </div>
+
+    <div class="integrantes">
+      <h2>Integrantes:</h2>
+      <ul>
+        {{#each members}}
+          <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+
+    <div>
+      <h2>Descripción del Proyecto</h2>
+      <p class="description">{{description}}</p>
+    </div>
+
+    <div class="imagenes">
+      <h2>Imágenes del Proyecto:</h2>
+      {{#each images}}
+        <img src="{{this}}" class="imagen-memoria" alt="Imagen del proyecto">
+      {{/each}}
+    </div>
+  </div>
+</body>
+</html>

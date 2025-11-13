@@ -10,7 +10,11 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  NotFoundException,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { MemoriesService } from './memories.service';
 import { CreateMemoryDto } from './dto/create-memory.dto';
 import { UpdateMemoryDto } from './dto/update-memory.dto';
@@ -111,5 +115,27 @@ export class MemoriesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.memoriesService.remove(id);
+  }
+
+  @Get(':id/pdf')
+  @ApiOperation({ summary: 'Generar un PDF de una memoria' })
+  @ApiResponse({
+    status: 200,
+    description: 'Devuelve el archivo PDF de la memoria.',
+  })
+  @ApiResponse({ status: 404, description: 'Memoria no encontrada.' })
+  async getMemoryAsPDF(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const pdfBuffer = await this.memoriesService.generateMemoryPDF(id);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=memoria-${id}.pdf`,
+    );
+
+    return new StreamableFile(pdfBuffer);
   }
 }

@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import Nav from '../../componentes/Nav';
-import Footer from '../../componentes/Footer';
-import type { Memory } from '../../interfaces/memories';
-import { getMemoryById } from '../../services/memoriesApiService';
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import Nav from "../../componentes/Nav";
+import Footer from "../../componentes/Footer";
+import type { Memory } from "../../interfaces/memories";
+import {
+  getMemoryById,
+  downloadMemoryPDF,
+} from "../../services/memoriesApiService";
 
 const MemoriaDetalle = () => {
   const { id } = useParams<{ id: string }>();
   const [memoria, setMemoria] = useState<Memory | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [isDownloading, setIsDownloading] = useState(false);
   useEffect(() => {
     if (!id) return;
 
@@ -18,7 +22,7 @@ const MemoriaDetalle = () => {
         const data = await getMemoryById(id);
         setMemoria(data);
       } catch (error) {
-        console.error('Error al cargar memoria:', error);
+        console.error("Error al cargar memoria:", error);
       } finally {
         setLoading(false);
       }
@@ -27,6 +31,18 @@ const MemoriaDetalle = () => {
     fetchMemory();
   }, [id]);
 
+  const handleDownload = async () => {
+    if (!id || !memoria) return;
+
+    setIsDownloading(true);
+    try {
+      await downloadMemoryPDF(id, memoria.title);
+    } catch (error) {
+      alert("No se pudo descargar el PDF. Inténtalo de nuevo.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   if (loading) return <p className="container mt-10">Cargando memoria...</p>;
   if (!memoria) return <p className="container mt-10">Memoria no encontrada</p>;
 
@@ -34,10 +50,7 @@ const MemoriaDetalle = () => {
     <>
       <Nav />
       <div className="container mt-5 flex ml-5">
-        <Link
-          to="/memorias"
-          className="mb-4 px-4 underline italic"
-        >
+        <Link to="/memorias" className="mb-4 px-4 underline italic">
           ← Volver a Memorias
         </Link>
       </div>
@@ -45,24 +58,54 @@ const MemoriaDetalle = () => {
       <div className="container mt-8 flex flex-col md:flex-row items-center md:items-start gap-8 px-4 md:px-10">
         {memoria.images.length > 0 && (
           <img
-            src={memoria.images[0]} 
+            src={memoria.images[0]}
             className="w-[500px] h-[400px] rounded-lg shadow-lg object-cover"
           />
         )}
 
         <div className="flex flex-col justify-center text-center md:text-left">
           <h1 className="text-4xl  mb-4">{memoria.title}</h1>
-          
+
           <p className="leading-relaxed ">
-            <strong>Miembros:</strong> {memoria.members.join(', ')}
-            <p className="text-gray-700 leading-relaxed mt-5">{memoria.description}</p>
-            <p className='mt-5'><strong>Docente:</strong> {memoria.teacher}</p>
-            <p className='mt-8'> {memoria.company && <><strong>Compañía:</strong> {memoria.company}<br /></>} 
-            <strong>Año:</strong> {memoria.year}</p>
-            
+            <strong>Miembros:</strong> {memoria.members.join(", ")}
+            <p className="text-gray-700 leading-relaxed mt-5">
+              {memoria.description}
+            </p>
+            <p className="mt-5">
+              <strong>Docente:</strong> {memoria.teacher}
+            </p>
+            <p className="mt-8">
+              {" "}
+              {memoria.company && (
+                <>
+                  <strong>Compañía:</strong> {memoria.company}
+                  <br />
+                </>
+              )}
+              <strong>Año:</strong> {memoria.year}
+            </p>
           </p>
-                    
-          <p className='text-gray-700 mt-5'>{memoria.createdAt && <em>Creada el: {new Date(memoria.createdAt).toLocaleDateString()}</em>}</p>
+          <button
+            onClick={handleDownload}
+            disabled={isDownloading}
+            className="
+              mt-8 px-6 py-2 
+              bg-blue-600 text-white font-bold 
+              rounded-lg shadow hover:bg-blue-700 
+              transition-colors duration-200
+              disabled:bg-gray-400 disabled:cursor-not-allowed
+              self-center md:self-start
+            "
+          >
+            {isDownloading ? "Descargando..." : "Descargar Memoria (PDF)"}
+          </button>
+          <p className="text-gray-700 mt-5">
+            {memoria.createdAt && (
+              <em>
+                Creada el: {new Date(memoria.createdAt).toLocaleDateString()}
+              </em>
+            )}
+          </p>
         </div>
       </div>
 

@@ -49,3 +49,38 @@ export const getMemoryById = async (id: string): Promise<Memory> => {
     throw error.response?.data || new Error('Error al obtener la memoria');
   }
 };
+
+export const downloadMemoryPDF = async (id: string, title: string) => {
+  try {
+    const response = await apiService.get(
+      `/memories/${id}/pdf`,
+      {
+        responseType: 'blob', 
+      }
+    );
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    
+    const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    link.setAttribute('download', `memoria-${safeTitle}.pdf`);
+    
+    document.body.appendChild(link);
+    link.click();
+    
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+  } catch (error: any) {
+    if (error.response && error.response.data instanceof Blob) {
+      const errorText = await error.response.data.text();
+      const errorJson = JSON.parse(errorText);
+      console.error('Error al descargar el PDF (JSON):', errorJson);
+      throw errorJson || new Error('Error al descargar el PDF');
+    } else {
+      console.error('Error al descargar el PDF:', error.response?.data || error.message);
+      throw error.response?.data || new Error('Error al descargar el PDF');
+    }
+  }
+};
