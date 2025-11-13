@@ -9,7 +9,7 @@ function Reservas() {
 
   return (<>
     <Nav/>
-     <div className="container mt-8 flex ml-9">
+     <div className="container mt-5 flex ml-2">
         <Link
           to="/"
           className="mb-4 px-4 underline italic"
