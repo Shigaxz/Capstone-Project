@@ -1,4 +1,4 @@
-import './componentes_css/CardMenu.css';
+import './componentes_css/Cardmenu.css';
 import { Link } from 'react-router-dom';
 
 import image1 from '../assets/imgBiblio/E_Biblioteca_1.jpg';
