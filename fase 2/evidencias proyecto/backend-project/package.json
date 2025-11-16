@@ -13,11 +13,16 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --verbose --coverage",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
+    "test:cov": "jest --coverage --coverageReporters=text --coverageReporters=lcov --coverageReporters=html",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:report": "jest --verbose --coverage --coverageReporters=html --coverageReporters=json --coverageReporters=text",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:load": "artillery run load-tests/reservations-load-test.yml",
+    "test:load:report": "artillery run --output load-tests/report.json load-tests/reservations-load-test.yml && artillery report load-tests/report.json --output load-tests/report.html",
+    "test:load:quick": "artillery quick --duration 60 --rate 10 http://localhost:3000/api/reservations",
+    "test:stress": "artillery run load-tests/stress-test.yml"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.896.0",
@@ -81,22 +86,5 @@
     "tsconfig-paths": "4.2.0",
     "typescript": "5.7.3",
     "typescript-eslint": "8.20.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      ".+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }

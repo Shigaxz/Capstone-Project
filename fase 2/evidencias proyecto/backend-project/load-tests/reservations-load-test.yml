@@ -1,0 +1,261 @@
+config:
+  target: "http://localhost:3000/api"
+  phases:
+    # Fase 1: Prueba de Carga (Load Test)
+    - duration: 60
+      arrivalRate: 10
+      name: "Carga Normal - 10 usuarios/seg"
+    
+    # Fase 2: Prueba de Estrés (Stress Test)
+    - duration: 120
+      arrivalRate: 50
+      name: "Estrés - 50 usuarios/seg"
+    
+    # Fase 3: Prueba de Pico (Spike Test)
+    - duration: 30
+      arrivalRate: 100
+      name: "Pico - 100 usuarios/seg"
+    
+    # Fase 4: Prueba de Resistencia (Soak Test)
+    - duration: 300
+      arrivalRate: 20
+      name: "Resistencia - 20 usuarios/seg por 5 min"
+
+  # Headers globales (aplica a todas las peticiones)
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      x-api-key: "2AKT9T8B9XqlQUP"
+
+  # Plugins para capturar métricas
+  plugins:
+    html-report:
+      output: "load-tests/report.html"
+  
+  # Variables de entorno
+  variables:
+    adminEmail: "va.cabrera@duocuc.cl"
+    adminPassword: "holahola123"
+
+scenarios:
+  # Escenario 0: Login de Admin (para obtener JWT)
+  - name: "Autenticación Admin"
+    weight: 1
+    flow:
+      - post:
+          url: "/admin/login"
+          json:
+            email: "{{ adminEmail }}"
+            password: "{{ adminPassword }}"
+          capture:
+            - json: "$.access_token"
+              as: "jwtToken"
+          expect:
+            - statusCode: 200
+
+  # Escenario 1: Endpoints públicos (solo requieren API Key)
+  - name: "Endpoints Públicos - Reservas"
+    weight: 3
+    flow:
+      # Consultar disponibilidad (público)
+      - get:
+          url: "/reservations/availability/68f7d322b53a3c0fa899cc81?date=2025-11-20"
+          expect:
+            - statusCode: 200
+            - contentType: json
+      
+      # Crear una reserva (público)
+      - post:
+          url: "/reservations"
+          json:
+            espacioId: "68f7d322b53a3c0fa899cc81"
+            email: "test{{ $randomNumber() }}@duocuc.cl"
+            startTime: "2025-11-20T{{ $randomNumber(10, 18) }}:00:00.000Z"
+            duration: 60
+          expect:
+            - statusCode: 201
+      
+      - think: 2 # Pausa de 2 segundos
+
+  # Escenario 2: Endpoints protegidos con JWT
+  - name: "Endpoints Protegidos - Admin"
+    weight: 2
+    flow:
+      # 1. Login para obtener JWT
+      - post:
+          url: "/admin/login"
+          json:
+            email: "{{ adminEmail }}"
+            password: "{{ adminPassword }}"
+          capture:
+            - json: "$.access_token"
+              as: "jwtToken"
+          expect:
+            - statusCode: 200
+      
+      # 2. Consultar reservas pendientes (requiere JWT)
+      - get:
+          url: "/reservations/pending"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          expect:
+            - statusCode: 200
+      
+      # 3. Aprobar una reserva (requiere JWT)
+      - patch:
+          url: "/reservations/68f7d322b53a3c0fa899cc81/approve"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          expect:
+            - statusCode: [200, 404] # 404 si no existe
+      
+      # 4. Consultar historial (requiere JWT)
+      - get:
+          url: "/reservations/history"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          expect:
+            - statusCode: 200
+      
+      - think: 1
+
+  # Escenario 3: Flujo completo de memorias
+  - name: "Flujo Completo - Memorias"
+    weight: 2
+    flow:
+      # 1. Listar todas las memorias (público)
+      - get:
+          url: "/memories"
+          expect:
+            - statusCode: 200
+      
+      # 2. Login para crear memoria
+      - post:
+          url: "/admin/login"
+          json:
+            email: "{{ adminEmail }}"
+            password: "{{ adminPassword }}"
+          capture:
+            - json: "$.access_token"
+              as: "jwtToken"
+      
+      # 3. Crear una memoria (requiere JWT)
+      - post:
+          url: "/memories"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          json:
+            title: "Memoria Test {{ $randomNumber() }}"
+            members: ["Alumno {{ $randomNumber(1, 100) }}", "Alumno {{ $randomNumber(1, 100) }}"]
+            teacher: "Profesor Test"
+            description: "Descripción de prueba de carga"
+            year: 2025
+          capture:
+            - json: "$._id"
+              as: "memoryId"
+          expect:
+            - statusCode: 201
+      
+      # 4. Consultar la memoria creada (público)
+      - get:
+          url: "/memories/{{ memoryId }}"
+          expect:
+            - statusCode: [200, 404]
+      
+      - think: 2
+
+  # Escenario 4: Flujo de espacios y locaciones
+  - name: "Flujo Espacios y Locaciones"
+    weight: 2
+    flow:
+      # 1. Listar todas las locaciones
+      - get:
+          url: "/locations"
+          expect:
+            - statusCode: 200
+      
+      # 2. Listar todos los espacios
+      - get:
+          url: "/spaces"
+          expect:
+            - statusCode: 200
+      
+      # 3. Consultar espacio específico
+      - get:
+          url: "/spaces/68f7d322b53a3c0fa899cc81"
+          expect:
+            - statusCode: [200, 404]
+      
+      # 4. Login para operaciones admin
+      - post:
+          url: "/admin/login"
+          json:
+            email: "{{ adminEmail }}"
+            password: "{{ adminPassword }}"
+          capture:
+            - json: "$.access_token"
+              as: "jwtToken"
+      
+      # 5. Crear una locación (requiere JWT)
+      - post:
+          url: "/locations"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          json:
+            name: "Locación Test {{ $randomNumber() }}"
+            address: "Dirección Test"
+          capture:
+            - json: "$._id"
+              as: "locationId"
+          expect:
+            - statusCode: 201
+      
+      # 6. Crear un espacio en esa locación (requiere JWT)
+      - post:
+          url: "/locations/{{ locationId }}/spaces"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          json:
+            name: "Espacio Test {{ $randomNumber() }}"
+            capacity: 30
+            description: "Sala de pruebas"
+          expect:
+            - statusCode: 201
+      
+      - think: 1
+
+  # Escenario 5: Prueba de generación de PDF
+  - name: "Generación de PDFs"
+    weight: 1
+    flow:
+      # 1. Login
+      - post:
+          url: "/admin/login"
+          json:
+            email: "{{ adminEmail }}"
+            password: "{{ adminPassword }}"
+          capture:
+            - json: "$.access_token"
+              as: "jwtToken"
+      
+      # 2. Listar memorias
+      - get:
+          url: "/memories"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          capture:
+            - json: "$[0]._id"
+              as: "memoryId"
+          expect:
+            - statusCode: 200
+      
+      # 3. Generar PDF (operación pesada)
+      - get:
+          url: "/memories/{{ memoryId }}/pdf"
+          headers:
+            Authorization: "Bearer {{ jwtToken }}"
+          expect:
+            - statusCode: [200, 404]
+            - contentType: "application/pdf"
+      
+      - think: 3
