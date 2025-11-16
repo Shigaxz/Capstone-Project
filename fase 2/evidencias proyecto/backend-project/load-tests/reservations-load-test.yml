@@ -34,8 +34,8 @@ config:
   
   # Variables de entorno
   variables:
-    adminEmail: "va.cabrera@duocuc.cl"
-    adminPassword: "holahola123"
+    adminEmail: ""
+    adminPassword: ""
 
 scenarios:
   # Escenario 0: Login de Admin (para obtener JWT)
