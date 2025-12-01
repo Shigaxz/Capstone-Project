@@ -1,9 +1,10 @@
-import React, { useState, useMemo, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   getReservationsForSpaceAndDate,
   createReservation,
 } from "../../services/reservationsApiServices";
+import { getSpaceById } from "../../services/spacesApiServices";
 import type {
   Reservation,
   CreateReservationData,
@@ -15,6 +16,7 @@ import {
   setMinutes,
   addMinutes,
   isBefore,
+  isAfter,
   isEqual,
   startOfDay,
   addDays,
@@ -24,14 +26,15 @@ import {
 } from "date-fns";
 import { es } from "date-fns/locale";
 import EmailConfirmationModal from "./EmailConfirmationModal";
-import Navbar from '../../componentes/reservas/Navbar';
+import Navbar from "../../componentes/reservas/Navbar";
 import Footer from "../../componentes/Footer";
+
 const SeleccionHorario: React.FC = () => {
   const { idLocation, idSpace } = useParams<{
     idLocation: string;
     idSpace: string;
   }>();
-
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Date>(
     startOfDay(new Date())
   );
@@ -44,6 +47,25 @@ const SeleccionHorario: React.FC = () => {
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
   const [duration, setDuration] = useState<30 | 60>(30);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!idSpace || !idLocation) return;
+
+    const verifySpace = async () => {
+      try {
+        // Obtenemos los datos del espacio
+        const spaceData = await getSpaceById(idSpace);
+        // Si no está disponible, alertamos y redirigimos
+        if (!spaceData.isAvailable) {
+          navigate(`/reservas/${idLocation}`); // Redirige a la lista de espacios del lugar
+        }
+      } catch (err) {
+        setError("No se pudo verificar la disponibilidad del espacio.");
+      }
+    };
+
+    verifySpace();
+  }, [idSpace, idLocation, navigate]);
 
   const fetchAvailability = useCallback(async () => {
     if (!idSpace) return;
@@ -67,11 +89,11 @@ const SeleccionHorario: React.FC = () => {
   const timeSlots = useMemo(() => {
     const slots: Date[] = [];
     const startHour = 8;
-    const endHour = 22;
     const interval = 30;
 
     let currentTime = setMinutes(setHours(selectedDate, startHour), 0);
-    const endTime = setMinutes(setHours(selectedDate, endHour), 0);
+    currentTime = addMinutes(currentTime, interval);
+    const endTime = setMinutes(setHours(selectedDate, 22), 30);
 
     while (isBefore(currentTime, endTime)) {
       slots.push(currentTime);
@@ -189,13 +211,11 @@ const SeleccionHorario: React.FC = () => {
   };
   return (
     <div className="bg-slate-50 min-h-screen">
-        <Navbar 
-        buttonText="Volver a Espacios" 
+      <Navbar
+        buttonText="Volver a Espacios"
         buttonPath={`/reservas/${idLocation}`}
       />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        
-
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold font-sans text-gray-800">
             Selecciona un Horario
@@ -284,6 +304,14 @@ const SeleccionHorario: React.FC = () => {
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
               {timeSlots.map((slot: Date) => {
+                // Define la hora de cierre estricta (22:30 del día seleccionado)
+                const closingTime = setMinutes(setHours(selectedDate, 22), 30);
+                // Calcula a qué hora terminaría esta reserva
+                const potentialEndTime = addMinutes(slot, duration);
+                // Si termina después de las 22:30, NO renderiza el botón
+                if (isAfter(potentialEndTime, closingTime)) {
+                  return null;
+                }
                 const isReserved = existingReservations.some((res) => {
                   const resStart = new Date(res.startTime);
                   const resEnd = new Date(res.endTime);
@@ -344,7 +372,7 @@ const SeleccionHorario: React.FC = () => {
           duration={duration}
         />
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

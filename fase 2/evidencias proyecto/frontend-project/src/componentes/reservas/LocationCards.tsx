@@ -44,22 +44,53 @@ const LocationCards: React.FC = () => {
           <Link
             to={`/reservas/${location._id}`}
             key={location._id}
-            className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 no-underline max-w-sm mx-auto sm:mx-0" // Added max-width and margin handling
+            // 1. BLOQUEO DE NAVEGACIÓN: Si no está disponible, previene el click
+            onClick={(e) => !location.isAvailable && e.preventDefault()}
+            className={`
+              group block rounded-lg overflow-hidden transition-all duration-300 no-underline max-w-sm mx-auto sm:mx-0
+              ${location.isAvailable 
+                ? 'bg-white shadow-md hover:shadow-xl hover:-translate-y-1' // Estilo Disponible (Blanco, sombra, movimiento)
+                : 'bg-gray-300 cursor-not-allowed opacity-90 grayscale'      // Estilo No Disponible (Gris oscuro, sin cursor, escala de grises)
+              }
+            `}
           >
-            <div className="h-48 overflow-hidden">
+            <div className="h-48 overflow-hidden relative">
               <img
                 src={location.urlImage || 'https://via.placeholder.com/400x300.png?text=Sin+Imagen'}
                 alt={location.name}
-                className="w-100 h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className={`
+                  w-full h-full object-cover transition-transform duration-300
+                  ${location.isAvailable ? 'group-hover:scale-105' : ''} 
+                `}
               />
+              {/* Badge superpuesto en la imagen si no está disponible */}
+              {!location.isAvailable && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                </div>
+              )}
             </div>
+
             <div className="p-4">
               <h3 className="text-xl font-semibold text-gray-800 text-center">
                 {location.name}
               </h3>
+              
+              {/* Texto inferior indicativo */}
+              <div className="text-center mt-3">
+                {location.isAvailable ? (
+                  <span className="text-blue-600 font-medium text-sm">
+                    Ver Espacios &rarr;
+                  </span>
+                ) : (
+                  <span className="text-gray-600 font-bold text-sm">
+                    No Disponible
+                  </span>
+                )}
+              </div>
             </div>
           </Link>
         ))}
+        
         {locations.length === 0 && !loading && (
             <p className="text-center text-gray-500 col-span-full">No se encontraron lugares disponibles.</p>
         )}

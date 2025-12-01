@@ -15,6 +15,16 @@ export const getSpacesByLocation = async (locationId: string): Promise<Space[]> 
     throw error.response?.data || new Error('Error al obtener espacios');
   }
 };
+// Metogo GET::id
+export const getSpaceById = async (id: string): Promise<Space> => {
+  try {
+    const response = await apiService.get(`/spaces/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error con espacio id: ${id}:`, error.response?.data || error.message);
+    throw error.response?.data || new Error('Error al obtener el espacio');
+  }
+};
 // Metodo POST
 export const createSpace = async (locationId: string, spaceData: CreateSpaceData): Promise<Space> => {
   try {

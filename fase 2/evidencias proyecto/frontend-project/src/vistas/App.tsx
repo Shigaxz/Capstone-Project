@@ -14,6 +14,8 @@ import MemoryManager from "../vistas/Admin/MemoryManager";
 import ReservationManager from "../vistas/Admin/ReservationManager";
 import ProtectedRoute from "../componentes/ProtectedRoute";
 import SpaceSelectionPage from "./Reservas/SpaceSelectionPage";
+import AdminManager from "./Admin/AdminManager";
+
 
 function App() {
   return (
@@ -37,6 +39,7 @@ function App() {
             <Route path="spaces" element={<SpaceManager />} />
             <Route path="memories" element={<MemoryManager />} />
             <Route path="reservations" element={<ReservationManager />} />
+            <Route path="admins" element={<AdminManager />} />
           </Route>
         </Route>
       </Routes>

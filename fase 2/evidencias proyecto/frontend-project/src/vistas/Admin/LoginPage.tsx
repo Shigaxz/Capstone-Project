@@ -161,7 +161,8 @@ const LoginPage = () => {
                 : "Registrar"}
             </button>
           </form>
-
+          {/* Boton deshabilitado de cambio entre login y register */}
+          {/* 
           <div className="text-center mt-6">
             <button
               type="button"
@@ -173,6 +174,7 @@ const LoginPage = () => {
                 : "¿Ya tienes cuenta? Inicia sesión"}
             </button>
           </div>
+          */}
         </div>
       </div>
     </div>

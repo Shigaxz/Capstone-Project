@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getSpacesByLocation } from '../../services/spacesApiServices';
+import { getLocationById } from '../../services/locationsApiServices';
 import type { Space } from '../../interfaces/spaces';
 import Footer from '../../componentes/Footer';
 import Navbar from '../../componentes/reservas/Navbar';
 
 const SpaceSelectionPage: React.FC = () => {
   const { id: locationId } = useParams<{ id: string }>();
-
+  const navigate = useNavigate();
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,12 +25,20 @@ const SpaceSelectionPage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getSpacesByLocation(locationId);
-        setSpaces(data);
-        if (data.length > 0) { /* empty */ }
+        // Obtenemos la informacion de la location
+        const locationData = await getLocationById(locationId);
+        // Verificamos si está disponible
+        if (!locationData.isAvailable) {
+          navigate('/reservas'); // Redirigir a la lista general
+          return; // Detener la ejecución
+        }
+        // Si está disponible cargamos los espacios
+        const spacesData = await getSpacesByLocation(locationId);
+        setSpaces(spacesData);
 
       } catch (err: any) {
-        setError(err.message || 'Error al cargar los espacios.');
+        console.error(err);
+        setError(err.message || 'Error al cargar la información.');
       } finally {
         setLoading(false);
       }
