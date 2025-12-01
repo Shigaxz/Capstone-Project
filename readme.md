@@ -9,19 +9,19 @@ El proyecto consiste en el desarrollo de una plataforma digital integral para el
 ---
 ## Estructura del Repositorio
 
-- **`fase1/`** →
-  - evidenciaIndividuales  
-  - evidenciasGrupales   
+- **`Fase 1/`** →
+  - Evidencias Individuales  
+  - Evidencias Grupales   
 
-- **`fase2/`** →
-  - evidenciaIndividuales  
-  - evidenciasGrupales 
-  - evidenciaProyecto 
+- **`Fase 2/`** →
+  - Evidencias Individuales    
+  - Evidencias Grupales 
+  - Evidencias Proyecto
 
 
-- **`fase3/`** → 
-  - evidenciaIndividuales  
-  - evidenciasGrupales
+- **`Fase 3/`** → 
+  - Evidencias Individuales    
+  - Evidencias Grupales 
 --- 
 ## Stack Tecnologico
 - Lenguaje de programacion: JavaScript, TypeScript.
