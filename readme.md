@@ -16,7 +16,7 @@ El proyecto consiste en el desarrollo de una plataforma digital integral para el
 - **`Fase 2/`** →
   - Evidencias Individuales    
   - Evidencias Grupales 
-  - Evidencias Proyecto/ →
+  - Evidencias Proyecto/
     - Evidencias de sistema
 
 
