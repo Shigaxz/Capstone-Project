@@ -12,11 +12,10 @@ const MemoriaDetalle = () => {
   const { id } = useParams<{ id: string }>();
   const [memoria, setMemoria] = useState<Memory | null>(null);
   const [loading, setLoading] = useState(true);
-
   const [isDownloading, setIsDownloading] = useState(false);
+
   useEffect(() => {
     if (!id) return;
-
     const fetchMemory = async () => {
       try {
         const data = await getMemoryById(id);
@@ -27,13 +26,11 @@ const MemoriaDetalle = () => {
         setLoading(false);
       }
     };
-
     fetchMemory();
   }, [id]);
 
   const handleDownload = async () => {
     if (!id || !memoria) return;
-
     setIsDownloading(true);
     try {
       await downloadMemoryPDF(id, memoria.title);
@@ -43,74 +40,87 @@ const MemoriaDetalle = () => {
       setIsDownloading(false);
     }
   };
-  if (loading) return <p className="container mt-10">Cargando memoria...</p>;
-  if (!memoria) return <p className="container mt-10">Memoria no encontrada</p>;
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>Cargando memoria...</p></div>;
+  if (!memoria) return <div className="min-h-screen flex items-center justify-center"><p>Memoria no encontrada</p></div>;
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen bg-white">
       <Nav />
-      <div className="container mt-5 flex ml-5">
-        <Link to="/memorias" className="mb-4 px-4 underline italic">
-          ← Volver a Memorias
-        </Link>
-      </div>
 
-      <div className="container mt-8 flex flex-col md:flex-row items-center md:items-start gap-8 px-4 md:px-10">
-        {memoria.images.length > 0 && (
-          <img
-            src={memoria.images[0]}
-            className="w-[500px] h-[400px] rounded-lg shadow-lg object-cover"
-          />
-        )}
-
-        <div className="flex flex-col justify-center text-center md:text-left">
-          <h1 className="text-4xl  mb-4">{memoria.title}</h1>
-
-          <p className="leading-relaxed ">
-            <strong>Miembros:</strong> {memoria.members.join(", ")}
-            <p className="text-gray-700 leading-relaxed mt-5">
-              {memoria.description}
-            </p>
-            <p className="mt-5">
-              <strong>Docente:</strong> {memoria.teacher}
-            </p>
-            <p className="mt-8">
-              {" "}
-              {memoria.company && (
-                <>
-                  <strong>Compañía:</strong> {memoria.company}
-                  <br />
-                </>
-              )}
-              <strong>Año:</strong> {memoria.year}
-            </p>
-          </p>
-          <button
-            onClick={handleDownload}
-            disabled={isDownloading}
-            className="
-              mt-8 px-6 py-2 
-              bg-blue-600 text-white font-bold 
-              rounded-lg shadow hover:bg-blue-700 
-              transition-colors duration-200
-              disabled:bg-gray-400 disabled:cursor-not-allowed
-              self-center md:self-start
-            "
-          >
-            {isDownloading ? "Descargando..." : "Descargar Memoria (PDF)"}
-          </button>
-          <p className="text-gray-700 mt-5">
-            {memoria.createdAt && (
-              <em>
-                Creada el: {new Date(memoria.createdAt).toLocaleDateString()}
-              </em>
-            )}
-          </p>
+      <main className="flex-grow w-full pb-12">
+        
+        <div className="container mx-auto mt-5 px-4"> 
+          <Link to="/memorias" className="inline-block mb-4 px-2 underline italic">
+            ← Volver a Memorias
+          </Link>
         </div>
-      </div>
+
+        <div className="container mx-auto mt-8 flex flex-col md:flex-row items-center md:items-start gap-10 px-4">
+          {/* Imagen */}
+          {memoria.images.length > 0 && (
+            <div className="flex-shrink-0 w-full md:w-[500px]">
+                <img
+                src={memoria.images[0]}
+                alt={memoria.title}
+                className="w-full h-[400px] rounded-lg shadow-lg object-cover"
+                />
+            </div>
+          )}
+
+          <div className="flex flex-col text-center md:text-left w-full">
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">{memoria.title}</h1>
+
+            <div className="space-y-4 text-gray-700 leading-relaxed">
+                <div>
+                    <strong className="text-gray-900">Miembros:</strong> {memoria.members.join(", ")}
+                </div>
+                
+                <div className="text-gray-600 mt-4">
+                    {memoria.description}
+                </div>
+
+                <div className="mt-4">
+                    <strong className="text-gray-900">Docente:</strong> {memoria.teacher}
+                </div>
+
+                <div className="mt-2">
+                    {memoria.company && (
+                        <>
+                        <strong className="text-gray-900">Compañía:</strong> {memoria.company}
+                        <br />
+                        </>
+                    )}
+                    <strong className="text-gray-900">Año:</strong> {memoria.year}
+                </div>
+            </div>
+
+            <button
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className="
+                mt-8 px-6 py-3 
+                bg-blue-600 text-white font-bold 
+                rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg
+                transition-all duration-200
+                disabled:bg-gray-400 disabled:cursor-not-allowed
+                self-center md:self-start
+              "
+            >
+              {isDownloading ? "Descargando..." : "Descargar Memoria (PDF)"}
+            </button>
+
+            {memoria.createdAt && (
+                <p className="text-gray-400 text-sm mt-8 italic">
+                 Creada el: {new Date(memoria.createdAt).toLocaleDateString()}
+                </p>
+            )}
+          </div>
+        </div>
+      </main>
 
       <Footer />
-    </>
+    </div>
   );
 };
 
